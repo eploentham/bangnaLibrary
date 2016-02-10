@@ -1,0 +1,524 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package bangnaLibrary;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author root
+ */
+public class MuangsamutDB {
+    Config1 config1;
+    BBranch branch = new BBranch();
+    PatientVisit pv = new PatientVisit();
+    BackTPatientVisitDB1 bpvdb1 = new BackTPatientVisitDB1();
+    BackTPatientVisitDB bpvdb = new BackTPatientVisitDB();
+    public MuangsamutDB(){
+        config1 = new Config1();
+    }
+    public MuangsamutDB(Config1 cf){
+        config1 = cf;
+    }
+    public void setRDailyVisitFitemGroup(String branch_id, String date_start, String date_end, String pttype){
+        String sql="", visit_date="", pttype_search="", bitem_dressing="",bitem_dressing1="";
+        
+        Vector v_visit = new Vector();
+        Vector v_visit_billing_item = new Vector();
+        Connection conn, conn_order, conn_dressing;
+        Statement st ;
+        Statement st_order, st_dressing;
+        Double drug=0.0, supply=0.0, lab=0.0, xray=0.0, service=0.0, dental=0.0, other=0.0, amount=0.0, dressing=0.0, df=0.0;
+        try {
+            conn = config1.getConnectionBangna();
+            conn_order = config1.getConnectionHospital(branch_id);
+            conn_dressing = config1.getConnectionHospital(branch_id);
+            st = conn.createStatement();
+            st_order = conn_order.createStatement();
+            st_dressing = conn_order.createStatement();
+            bitem_dressing = getBitemDressing(st, branch_id);
+            sql = "Delete from r_daily_visit_f_item_group ";
+            st.executeUpdate(sql);
+            branch = config1.getBranch(branch_id);
+            v_visit = config1.getPatientVisit(branch, date_start, date_end,pttype,"period_date_muangsamut");
+            for(int i=1;i<v_visit.size();i++){
+                pv = new PatientVisit();
+                pv = (PatientVisit)v_visit.get(i);
+                drug=0.0; supply=0.0; lab=0.0; xray=0.0; service=0.0; dental=0.0; other=0.0; amount=0.0;
+                sql = "Select sum(tbii.billing_invoice_item_total) as billing_invoice_item_total, "
+                + "bisg.f_item_group_id "
+                + "From t_visit tv "
+                + "left join t_billing_invoice_item tbii on tbii.t_visit_id = tv.t_visit_id and tbii.billing_invoice_item_active = '1' "
+                + "left join t_billing_invoice tbi on tbii.t_billing_invoice_id = tbi.t_billing_invoice_id "
+                + "left join t_visit_payment tvp on tv.t_visit_id = tvp.t_visit_id and tbii.t_payment_id = tvp.t_visit_payment_id "
+                + "left join b_contract_plans bcp on tvp.b_contract_plans_id = bcp.b_contract_plans_id "
+                + "left join b_visit_clinic bvc on tv.b_visit_clinic_id = bvc.b_visit_clinic_id "
+                + "left join b_item bi on tbii.b_item_id = bi.b_item_id "
+                + "left join b_item_subgroup bisg on bi.b_item_subgroup_id = bisg.b_item_subgroup_id "
+                + "Where tv.visit_vn = '"+pv.getVisitVn()+"' and tvp.t_visit_payment_id = '"+pv.getTVisitPaymentId()+"' and "
+                        + "tvp.b_contract_plans_id is not null "
+                + "Group By bisg.f_item_group_id, tv.visit_vn "
+                + "Order By tv.visit_vn";
+                ResultSet rs = st_order.executeQuery(sql);
+                while(rs.next()){
+                    try{
+                        if(pv.getVisitVn().equals("054000872(1)")){
+                            sql="";
+                        }
+                        if(rs.getString("f_item_group_id").equals("1")){
+                            drug = rs.getDouble("billing_invoice_item_total");
+                        }else if(rs.getString("f_item_group_id").equals("2")){
+                            lab = rs.getDouble("billing_invoice_item_total");
+                        }else if(rs.getString("f_item_group_id").equals("3")){
+                            xray = rs.getDouble("billing_invoice_item_total");
+                        }else if(rs.getString("f_item_group_id").equals("4")){
+                            supply = rs.getDouble("billing_invoice_item_total");
+                        }else if(rs.getString("f_item_group_id").equals("5")){
+                            if(pv.getVisitVn().equals("054000872(1)")){
+                                sql="";
+                            }
+                            service = rs.getDouble("billing_invoice_item_total");
+                            dressing=0.0;
+                            df=0.0;
+                            sql = "Select sum(tbii.billing_invoice_item_total) as billing_invoice_item_total "
+                + "From t_visit tv "
+                + "left join t_billing_invoice_item tbii on tbii.t_visit_id = tv.t_visit_id and tbii.billing_invoice_item_active = '1' "
+                + "left join b_item bi on tbii.b_item_id = bi.b_item_id "
+                + "Where tv.visit_vn = '"+pv.getVisitVn()+"' and bi.item_number in ("+bitem_dressing+") "
+                + "Group By tv.visit_vn ";
+                            ResultSet rsdresshosp = st_dressing.executeQuery(sql);
+                            while (rsdresshosp.next()){
+                                dressing = rsdresshosp.getDouble("billing_invoice_item_total");
+                            }
+                            rsdresshosp.close();
+                            if(dressing>0.0){
+                                service = service-dressing;
+                            }
+                            other = dressing;
+                            if(pv.getPatientHn().equals("0154002029")){
+                                sql="";
+                            }
+                            sql = "Select sum(tbii.billing_invoice_item_total) as billing_invoice_item_total "
+                + "From t_visit tv "
+                + "left join t_billing_invoice_item tbii on tbii.t_visit_id = tv.t_visit_id and tbii.billing_invoice_item_active = '1' "
+                + "left join b_item bi on tbii.b_item_id = bi.b_item_id "
+                + "left join b_item_16_group bi16 on bi16.b_item_16_group_id = bi.b_item_16_group_id "
+                + "Where tv.visit_vn = '"+pv.getVisitVn()+"' and bi16.item_16_group_number in ('18') "
+                + "Group By tv.visit_vn ";
+                            ResultSet rsdfhosp = st_dressing.executeQuery(sql);
+                            while (rsdfhosp.next()){
+                                df = rsdfhosp.getDouble("billing_invoice_item_total");
+                            }
+                            rsdfhosp.close();
+                            if(df>0.0){
+                                service = service-df;
+                            }
+                        }else if(rs.getString("f_item_group_id").equals("6")){
+                            dental = rs.getDouble("billing_invoice_item_total");
+                        }else{
+//                            other = dressing;
+                            other = rs.getDouble("billing_invoice_item_total");
+                        }
+                        amount = drug+lab+xray+supply+service+dental+other+df;
+                    }catch(Exception ex){
+                        Logger.getLogger(MuangsamutDB.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                rs.close();
+                try{
+                    visit_date = config1.DateFormatShow2DBHospital(config1.DateFormatDB2Show(pv.getVisitDate(), "ddMMyyyy"),"ddMMyyyy");
+                    sql = "Insert Into r_daily_visit_f_item_group (r_id, visit_vn, patient_fullnamet,visit_hn ,"
+                            + "item_group_drug ,item_group_supply,item_group_lab,item_group_xray,item_group_dental,"
+                            + "item_group_service,amount,remark,item_group_other, visit_date, visit_time,item_df) "
+                    + "Values('"+i+"','"+pv.getVisitVn()+"','"+pv.getPatientNamet()+"','"+pv.getPatientHn()+"',"
+                            + drug+","+supply+","+lab+","+xray+","+dental+","
+                            +service+","+amount+",'"+ pv.getVisitPaidNamet()+"',"+other+",'"+visit_date+"','"+pv.getVisitTime()+"',"+df+")";
+                    st.executeUpdate(sql);
+                }catch(Exception ex){
+                    Logger.getLogger(MuangsamutDB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            conn.close();
+            conn_order.close();
+            conn_dressing.close();
+        } catch (Exception ex) {
+            Logger.getLogger(MuangsamutDB.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }
+    private String getBitemDressing(Statement st, String branch_id){
+        String sql="", bitem_dressing="",bitem_dressing1="";
+        sql = "Select fitemgroup_dressing From b_branch Where branch_id = '"+branch_id+"'";
+        ResultSet rsdressing;
+        try {
+            rsdressing = st.executeQuery(sql);
+            while (rsdressing.next()){
+                bitem_dressing = rsdressing.getString("fitemgroup_dressing");
+            }
+            String[] dressing1 = bitem_dressing.split(",");
+            rsdressing.close();
+            bitem_dressing="";
+            for(int ii=0;ii<=dressing1.length-1;ii++){
+                bitem_dressing1 = dressing1[ii];
+                if (bitem_dressing1.length() <= 0) {
+                    continue;
+                }
+                bitem_dressing += "'"+bitem_dressing1+"',";
+            }
+            if(bitem_dressing.substring(bitem_dressing.length()-1).equals(",")){
+                bitem_dressing = bitem_dressing.substring(0, bitem_dressing.length()-1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MuangsamutDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bitem_dressing;
+    }
+    public Vector getPatientVisit(BBranch branch, String visti_date_start, String visit_date_end, String dep_id, String flag) {
+        Vector vPatientVisit = new Vector();
+        Vector v_visit_paid = new Vector();
+        String time="", visit_date="",sql="", discharge_date="",txt="", error="", pttype_search="", depSearch="";
+        TVisit t_visit = new TVisit();
+        Integer i=0;
+
+        Contract contract = new Contract();
+        Doctor doctor = new Doctor();
+        Connection connmainhis, conn_paid, connmainhis2;
+        Statement stmainhis, st_paid, stMainHis2;
+        ResultSet rsmainhis, rs_paid;
+        PatientVisit pv = new PatientVisit();
+        try {
+//            branch = getBranch(branch_id);
+            conn_paid = config1.getConnectionBangna();
+            st_paid = conn_paid.createStatement();
+                connmainhis = config1.getConnectionHospital(branch.getBranchId());
+                connmainhis2 = config1.getConnectionHospital(branch.getBranchId());
+//                if(flag.equals("period_date")) {
+//                }else if(flag.equals("period_date_muangsamut")){
+                    if(!dep_id.equals("")){
+                        pttype_search = " and bcp.contract_plans_pttype = '"+dep_id+"' ";
+                    }
+//            sql="Select fpp.patient_prefix_description || ' ' || tp.patient_firstname || ' ' || tp.patient_lastname as patient_fullnamet, " +
+//    "tv.visit_hn as mnc_hn_no, tv.visit_vn as mnc_vn_no, " +
+//    "substring(tv."+t_visit.getFVisitBeginVisitTime()+",0,11) as visit_date, substring(tv."+t_visit.getFVisitBeginVisitTime()+",12) as visit_time, " +
+//    "tv."+t_visit.getFVisitStaffDoctorDischarge()+" as mnc_dot_cd, visit_patient_age, " +
+//    "tv."+t_visit.getFVisitNotice()+", '' as doctor_fullnamet, " +
+//    "bcp.contract_plans_number, " +
+//    "contract_plans_description, case when tb.billing_patient_share is null then 0 else tb.billing_patient_share end, case when tb.billing_total is null then 0 else tb.billing_total end, case when tb.billing_deduct is null then 0 else tb.billing_deduct end, " +
+//    "tv.visit_financial_discharge_time,tv.b_service_point_id,tp.t_patient_id, tv.visit_hospital_service,tv.visit_diagnosis_notice, " +
+//    "tv.contact_id as MNC_COM_CD, tv.contact_namet as MNC_COM_DSC, "
+//    + "case tv.contact_join_id when null then '' else tv.contact_join_id end as visit_contact_join_id, "
+//    + "case tv.contact_join_namet when null then '' else tv.contact_join_namet end as visit_contact_join_namet, " +
+//    "tv.surveillance_case_id,tp.contact_id,tp.contact_namet, tv.t_visit_id, tvp.t_visit_payment_id, " +
+//    "tb.billing_payer_share,tb.billing_patient_share, tv.f_visit_type_id,tbi.billing_invoice_payer_share," +
+//    "tbi.billing_invoice_patient_share,bcp.contract_plans_pttype,tv.t_visit_id, " +
+//    "tbi.close_day_id,"
+//    + "tv.f_visit_type_id, tp.contact_join_id, tp.contact_join_namet, contract_payer_number, "
+//    + "case bcp.contract_plans_pttype "
+//    + "when 'A1' then 'A1' "        + "when 'A2' then 'A2' "        + "when 'A3' then 'A3' "
+//    + "when 'A4' then 'A4' "        + "when 'A5' then 'A5' "        + "when 'A6' then 'A6' "
+//    + "when 'A7' then 'ปกส.ปู่เจ้า' "   + "when 'A8' then 'ปกส.ปากน้ำ' " + "when 'A9' then 'A9' "
+//    + "when 'AA' then 'AA' "        + "when 'AB' then 'AB' "        + "when 'AC' then 'AC' "
+//    + "when 'AD' then 'AD' "        + "when 'AE' then 'AE' "        + "when 'AF' then 'AF' "
+//    + "when 'AG' then 'AG' "        + "when 'AH' then 'AH' "        + "when 'AI' then 'AI' "
+//    + "when 'AJ' then 'AJ' "        + "when 'AK' then 'AK' "        + "when 'AL' then 'AL' "
+//    + "when 'AM' then 'AM' "        + "when 'AN' then 'ผู้ป่วยทั่วไป' "  + "when 'AO' then 'AO' "
+//    + "when 'AP' then 'AP' "        + "when 'AQ' then 'AQ' "        + "when 'AR' then 'AR' "
+//    + "when 'AS' then 'AS' "        + "when 'AT' then 'AT' "        + "when 'AU' then 'AU' "
+//    + "when 'AV' then 'AV' "        + "when 'AW' then 'AW' "        + "when 'AX' then 'AX' "
+//    + "when 'AY' then 'AY' "        + "when 'AZ' then 'AZ' "        + "when 'UC' then 'UC' "
+//    + "when '99' then 'อื่นๆ' "       + "when 'FN' then 'กรม(กองทุน)' "+ "when 'CO' then 'สัญญาบริษัท' "
+//    + "when 'CR' then 'ประกันชีวิต' "  + "when 'PP' then 'ประกันภัย' "        + "when 'UC1' then 'มิตรไมตรีคลีนิกเวชกรรม' "
+//    + "when 'UC2' then 'พงค์แพทย์โพลีคลีนิกเวชกรรม1' "        + "when 'UC3' then 'โพลีคลีนิกมหาชนพระประแดง' "        + "when 'UC4' then 'พงค์แพทย์โพลีคลีนิกเวชกรรม2' "
+//    + "when 'UC5' then 'สถานพยาบาลเมืองสมุทรบางปู' "        + "when 'UC6' then 'UC6' "        + "when 'UC7' then 'มิตรไมตรีคลีนิกเวชกรรม(แบริ่ง)' "
+//    + "when 'UC8' then 'UC8' "        + "when 'UC91' then 'วัคซีนโครงการ UC' "        + "when 'UC92' then 'UC งานอนามัยโรงเรียน' "
+//    + "else bcp.contract_plans_pttype end as contract_plans_pttype, tv.visit_an "+
+//    "From t_billing_invoice tbi " +
+//    "left join "+t_visit.getTVisit() +" tv on tv.t_visit_id = tbi.t_visit_id AND tv.f_visit_status_id <> '4' and tbi.billing_invoice_active = '1'  " +
+//    "left join t_patient tp on tv.t_patient_id = tp.t_patient_id "+
+//    "left join f_patient_prefix fpp on tp.f_patient_prefix_id = fpp.f_patient_prefix_id " +
+////            "LEFT JOIN t_diag_icd10 ON tv.t_visit_id::text = t_diag_icd10.diag_icd10_vn::text  and t_diag_icd10.diag_icd10_active = '1' and t_diag_icd10.f_diag_icd10_type_id = '1' " +
+////            "left join b_employee be on t_diag_icd10.diag_icd10_staff_doctor  = be.b_employee_id " +
+////            "left join b_visit_clinic bvc on t_diag_icd10.b_visit_clinic_id = bvc.b_visit_clinic_id " +
+//    "left join t_visit_payment tvp on tvp.t_visit_payment_id = tbi.t_payment_id  and tvp.visit_payment_active ='1' " +
+//    "left join b_contract_plans bcp on tvp.b_contract_plans_id = bcp.b_contract_plans_id " +
+//            "left join b_contract_payer bcper on bcp.b_contract_payer_id = bcper.b_contract_payer_id " +
+//    "left join t_billing tb on tbi.t_billing_id = tb.t_billing_id  and tb.billing_active = '1' "+
+//    "Where substring(tv."+t_visit.getFVisitBeginVisitTime()+",0,11) >= '"+
+//    visti_date_start+"' and substring(tv."+t_visit.getFVisitBeginVisitTime()+",0,11) <= '"+visit_date_end+"' "+pttype_search
+//            + "Order By tv.visit_vn";
+            
+            
+            sql="Select fpp.patient_prefix_description || ' ' || tp.patient_firstname || ' ' || tp.patient_lastname as patient_fullnamet, " +
+            "tv.visit_hn as mnc_hn_no, tv.visit_vn as mnc_vn_no, " +
+            "substring(tv."+t_visit.getFVisitBeginVisitTime()+",0,11) as visit_date, substring(tv."+t_visit.getFVisitBeginVisitTime()+",12) as visit_time, " +
+            "tv."+t_visit.getFVisitStaffDoctorDischarge()+" as mnc_dot_cd, visit_patient_age, " +
+            "tv."+t_visit.getFVisitNotice()+", " +
+            "bcp.contract_plans_number, " +
+            "contract_plans_description, "
+            +" 0 as billing_total,0 as billing_deduct, " +
+            "tv.visit_financial_discharge_time,tv.b_service_point_id,tp.t_patient_id, tv.visit_hospital_service,tv.visit_diagnosis_notice, " +
+            "tv.contact_id as MNC_COM_CD, tv.contact_namet as MNC_COM_DSC, tv.contact_join_id as visit_contact_join_id, tv.contact_join_namet as visit_contact_join_namet, " +
+            "tv.surveillance_case_id,tp.contact_id,tp.contact_namet, tv.t_visit_id, "
+            + " case when tvp.t_visit_payment_id is null then '' else tvp.t_visit_payment_id end, " 
+            +" 0 as billing_payer_share, 0 as billing_patient_share, tv.f_visit_type_id, 0 as billing_invoice_payer_share, 0 as billing_invoice_patient_share, "
+            + "bcp.contract_plans_pttype,tv.t_visit_id, case when contract_payer_number is null then '' else contract_payer_number end," 
+            +"'' as close_day_id,tv.f_visit_type_id, tp.contact_join_id, tp.contact_join_namet, tv.visit_an "
+            +"From t_visit_payment tvp "
+            +"left join "+t_visit.getTVisit() +" tv on tv.t_visit_id = tvp.t_visit_id " +
+            "inner join t_patient tp on tv.t_patient_id = tp.t_patient_id "+
+            "left join f_patient_prefix fpp on tp.f_patient_prefix_id = fpp.f_patient_prefix_id " +
+            "left join b_contract_plans bcp on tvp.b_contract_plans_id = bcp.b_contract_plans_id " +
+            "left join b_contract_payer bcper on bcp.b_contract_payer_id = bcper.b_contract_payer_id " +
+            "Where tv.visit_vn is not null "//ยังไม่ถูกปิดเวร แต่ต้องการดึงมาแสดง
+//            + "and tvp.status_payment = '0' "
+            + "AND tv.f_visit_status_id <> '4' and tvp.visit_payment_active = '1' "
+            + " and tv.b_contract_plans_id = tvp.b_contract_plans_id "
+            + "Order By tv.visit_vn ";
+            
+            stmainhis = connmainhis.createStatement();
+            stMainHis2 = connmainhis2.createStatement();
+            rsmainhis = stmainhis.executeQuery(sql);
+            while(rsmainhis.next()) {
+                try{
+                    i++;
+                    if(rsmainhis.getString("mnc_hn_no").equals("535000017")){
+                        error="";
+                    }
+                    if(i==292){
+                        error="";
+                    }
+                    pv = new PatientVisit();
+                    if(branch.getBranchProgram().equals("hospital_osv3")) {
+                        if(rsmainhis.getString("contract_plans_number").equals("002") && rsmainhis.getString("billing_invoice_patient_share").equals("0")){
+                            continue;
+                        }
+                        time = rsmainhis.getString("visit_time");
+                        time = time.substring(0,5);
+                        if(rsmainhis.getString("visit_date").length()>=10) visit_date = rsmainhis.getString("visit_date").substring(0, 10);
+                        else visit_date = rsmainhis.getString("visit_date");
+                        if(visit_date.length()>=10){
+                            visit_date = String.valueOf(Integer.parseInt(visit_date.substring(0, 4))-543)+visit_date.substring(4);
+                        }
+                        if(rsmainhis.getString("visit_financial_discharge_time").length()>=10) discharge_date = rsmainhis.getString("visit_financial_discharge_time").substring(0, 10);
+                        else discharge_date = rsmainhis.getString("visit_financial_discharge_time");
+                        error="01";
+                        pv.setPatientId(rsmainhis.getString("t_patient_id"));
+                        pv.setPatientNamet(rsmainhis.getString("patient_fullnamet"));
+                        pv.setVisitDate(visit_date);
+                        pv.setVisitTime(time);
+                        pv.setVisitVn(rsmainhis.getString("mnc_vn_no"));//+"."+rsmainhis.getString("mnc_vn_seq"));
+                        pv.setVisitDoctorId(rsmainhis.getString("mnc_dot_cd"));
+                        pv.setContractPayerNumber(rsmainhis.getString("contract_payer_number"));
+                        if((rsmainhis.getString("contract_plans_number") != null) && (!rsmainhis.getString("contract_plans_number").equals(""))) {
+                            pv.setVisitPaidId(rsmainhis.getString("contract_plans_number"));
+    //                        patient_visit.setVisitPaidId(rsmainhis.getString("contract_payer_number"));ยกเลิก เปลี่ยนเป็น payer
+                            pv.setVisitPaidNamet(rsmainhis.getString("contract_plans_description"));
+    //                        patient_visit.setVisitPaidNamet(rsmainhis.getString("contract_payer_description"));ยกเลิก เปลี่ยนเป็น payer
+                        }else {
+                            contract = config1.getContractPlansByVisit(branch.getBranchId(),rsmainhis.getString("t_visit_id"),rsmainhis.getString("t_visit_payment_id"));
+    //                        contract = getContractPayerByVisit(branch.getBranchId(),rsmainhis.getString("t_visit_id"),rsmainhis.getString("t_visit_payment_id"));
+                            pv.setVisitPaidId(contract.contract_id);
+                            pv.setVisitPaidNamet(contract.description);
+                        }
+                        pv.setPatientHn(rsmainhis.getString("mnc_hn_no"));
+                        if(rsmainhis.getString("mnc_hn_no").equals("535000142")){
+                            error="0111";
+                        }
+                        pv.setVisitNotice(rsmainhis.getString(t_visit.getFVisitNotice()));
+                        pv.setPatientAge(rsmainhis.getString("visit_patient_age"));
+
+                        doctor = new Doctor();
+                        doctor = config1.getClinicDoctorByVisit(branch.getBranchId(),rsmainhis.getString("t_visit_id"));
+                        pv.setVisitDoctorNamet(doctor.getDoctorNamet());
+                        pv.setVisitClinicId(doctor.getBVisitClinicId());
+                        pv.setVisitClinicNamet(doctor.getVisitClicinDescription());
+    //                    patient_visit.setVisitDoctorNamet(rsmainhis.getString("doctor_fullnamet"));
+
+                        if(rsmainhis.getString("MNC_COM_CD").equals("0")) {
+                            pv.setVisitContactId(config1.StringNull(rsmainhis.getString("contact_id")));
+                            pv.setVisitContactNamet(config1.StringNull(rsmainhis.getString("contact_namet")));
+                        }else {
+                            pv.setVisitContactId(config1.StringNull(rsmainhis.getString("MNC_COM_CD")));
+                            pv.setVisitContactNamet(config1.StringNull(rsmainhis.getString("MNC_COM_DSC")));
+                        }
+                        pv.setBServerPointId(rsmainhis.getString("b_service_point_id"));
+                        pv.setVisitHospitalService(rsmainhis.getString("visit_hospital_service"));
+                        pv.setVisitDiagnosisNotice(rsmainhis.getString("visit_diagnosis_notice"));
+                        pv.setVisitFinancialDischargeTime(discharge_date);
+
+                        error="02";
+                        if(rsmainhis.getString("billing_patient_share") != null){
+                            pv.setPaid(Double.parseDouble(rsmainhis.getString("billing_patient_share")));
+                        }else{
+                            pv.setPaid(0.0);
+                        }
+                        if(rsmainhis.getString("billing_total") != null){
+                            pv.setAmount(Double.parseDouble(rsmainhis.getString("billing_total")));
+                        }else{
+                            pv.setAmount(0.0);
+                        }
+                        if(rsmainhis.getString("billing_deduct") != null){
+                            pv.setDiscount(Double.parseDouble(rsmainhis.getString("billing_deduct")));
+                        }else{
+                            pv.setDiscount(0.0);
+                        }
+
+                        if(rsmainhis.getString("contract_plans_pttype").equals("A1")){//เงินสด cash
+                            if(rsmainhis.getString("billing_invoice_payer_share").equals("0")) {
+                                pv.setAmount(Double.parseDouble(rsmainhis.getString("billing_invoice_patient_share")));
+                                pv.setPaid(Double.parseDouble(rsmainhis.getString("billing_invoice_patient_share")));
+                            }else {
+                                pv.setAmount(Double.parseDouble(rsmainhis.getString("billing_invoice_payer_share")));
+                                pv.setPaid(0.0);
+                            }
+
+                        }else{//credit
+                            if(Double.parseDouble(rsmainhis.getString("billing_invoice_payer_share"))>0){
+                                pv.setAmount(Double.parseDouble(rsmainhis.getString("billing_invoice_payer_share")));
+                                pv.setPaid(0.0);
+                            }else{
+                                pv.setAmount(Double.parseDouble(rsmainhis.getString("billing_invoice_patient_share")));
+                                pv.setPaid(0.0);
+                            }
+                        }
+                        error="03";
+                        if(rsmainhis.getString("billing_payer_share") != null){
+                            pv.setBillingPayerShare(Double.parseDouble(rsmainhis.getString("billing_payer_share")));
+                        }else{
+                            pv.setBillingPayerShare(0.0);
+                        }
+                        if(rsmainhis.getString("billing_patient_share") != null){
+                            pv.setBillingPatientShare(Double.parseDouble(rsmainhis.getString("billing_patient_share")));
+                        }else{
+                            pv.setBillingPatientShare(0.0);
+                        }
+                        error="04";
+                        pv.setTVisitId(rsmainhis.getString("t_visit_id"));
+                        if(flag.equals("t_visit_payment_id")){
+                            pv.setTVisitPayment(visti_date_start);
+                        }else{
+                            pv.setTVisitPayment(rsmainhis.getString("t_visit_payment_id"));
+                        }
+                        
+                        pv.setFVisitTypeId(rsmainhis.getString("f_visit_type_id"));
+                        error="041";
+                        pv.setContractPlansPttype(rsmainhis.getString("contract_plans_pttype"));
+                        pv.setReceiptNumber(config1.getReceiptNumberByVN(st_paid, branch.getBranchId(),rsmainhis.getString("mnc_vn_no")));
+                        error="042";
+                        pv.setInvoiceNumber(config1.getInvoiceNumberByVN(st_paid,branch.getBranchId(),rsmainhis.getString("mnc_vn_no")));
+                        pv.setCloseDayId(rsmainhis.getString("close_day_id"));
+                        error="043";
+                        if(!rsmainhis.getString("visit_contact_join_id").equals("")){
+                            pv.setVisitContactJoinId(rsmainhis.getString("visit_contact_join_id"));
+                        }else{
+                            pv.setVisitContactJoinId(rsmainhis.getString("visit_contact_join_id"));
+                        }
+                        if(!rsmainhis.getString("visit_contact_join_namet").equals("")){
+                            pv.setVisitContactJoinNamet(rsmainhis.getString("visit_contact_join_namet"));
+                        }else{
+                            pv.setVisitContactJoinNamet(rsmainhis.getString("visit_contact_join_id"));
+                        }
+                        pv.setVisitAn(rsmainhis.getString("visit_an"));
+                    }else{
+                        
+                        sql="Select pt01.mnc_hn_no, pt01.mnc_date, pt01.mnc_time, pt01.mnc_vn_no, pt01.mnc_vn_seq, pt01.mnc_dot_cd, " +
+                    "pt01.mnc_fn_typ_cd,pt01.mnc_shif_memo, pt01.MNC_SEC_NO, pm02.mnc_pfix_dsc+' '+pm01.mnc_fname_t +' '+ pm01.mnc_lname_t as patient_fullnamet, "
+                    +"pmm02.mnc_pfix_dsc+' ' +pm26.mnc_dot_fname +' '+pm26.mnc_dot_lname as doctor_fullnamet, "
+                    +"fm02.mnc_fn_typ_dsc, pt01.mnc_shif_memo,datediff(year,pm01.mnc_bday,getdate()) as age, "+
+                    "pt01.MNC_SEC_NO, pm32.MNC_MD_DEP_DSC, pt01.MNC_COM_CD, pm24.MNC_COM_DSC,pt01.mnc_adm_flg "+
+                    "From patient_t01 pt01 left join patient_m01 pm01 on pt01.mnc_hn_no = pm01.mnc_hn_no and pt01.mnc_hn_yr = pm01.mnc_hn_yr " +
+                    "left join patient_m02 pm02 on pm01.mnc_pfix_cdt = pm02.mnc_pfix_cd " +
+                    "left join patient_m26 pm26 on pt01.mnc_dot_cd = pm26.mnc_dot_cd " +
+                    "left join patient_m02 pmm02 on pm26.mnc_dot_pfix = pmm02.mnc_pfix_cd left join "
+                    +"finance_m02 fm02 on pt01.mnc_fn_typ_cd = fm02.mnc_fn_typ_cd "+
+                    "left join patient_m32 pm32 on pt01.MNC_SEC_NO = pm32.MNC_SEC_NO " +
+                    "left join patient_m24 pm24 on pt01.MNC_COM_CD = pm24.MNC_COM_CD "+
+                    "Where pt01.mnc_date = '"+rsmainhis.getString("mnc_date")+"' and pt01.mnc_sts <> 'C' "
+                    + "and pt01.mnc_hn_no = '"+rsmainhis.getString("mnc_hn_no")+"' "
+                    +"Order By pt01.mnc_date, pt01.mnc_time ";
+                    
+                    ResultSet rsMainHis2 = stMainHis2.executeQuery(sql);
+                    while(rsMainHis2.next()) {
+                        if(rsmainhis.getString("mnc_hn_no").equals("1442291")){
+                            sql="";
+                        }
+                        time = "0000"+rsmainhis.getString("mnc_doc_tim");
+                        time = time.substring(time.length()-4, time.length());
+                        if(rsMainHis2.getString("mnc_date").length()>=10){
+                            visit_date = rsmainhis.getString("mnc_doc_dat").substring(0, 10);
+                        }else{
+                            visit_date = rsmainhis.getString("mnc_doc_dat");
+                        }
+    //                    patient_visit.setPatientId(rsmainhis.getString("mnc_hn_no"));
+                        pv.setPatientNamet(rsMainHis2.getString("patient_fullnamet"));
+                        pv.setVisitDate(visit_date);
+                        pv.setVisitTime(time);
+                        pv.setVisitVn(rsMainHis2.getString("mnc_vn_no")+"."+rsMainHis2.getString("mnc_vn_seq"));
+                        pv.setVisitDoctorId(rsMainHis2.getString("mnc_dot_cd"));
+                        pv.setVisitDoctorNamet(rsMainHis2.getString("doctor_fullnamet"));
+                        pv.setVisitPaidId(rsmainhis.getString("mnc_fn_typ_cd"));
+                        pv.setContractPayerNumber(rsmainhis.getString("mnc_fn_typ_cd"));
+                        pv.setVisitPaidNamet(rsmainhis.getString("mnc_fn_typ_dsc"));
+                        pv.setPatientHn(rsmainhis.getString("mnc_hn_no"));
+                        pv.setVisitNotice(rsMainHis2.getString("mnc_shif_memo"));
+                        pv.setPatientAge(rsMainHis2.getString("age"));
+                        pv.setVisitDoctorNamet(rsMainHis2.getString("doctor_fullnamet"));
+                        pv.setVisitClinicId(rsMainHis2.getString("MNC_SEC_NO"));
+                        pv.setVisitClinicNamet(rsMainHis2.getString("MNC_MD_DEP_DSC"));
+                        pv.setVisitContactId(rsMainHis2.getString("MNC_COM_CD"));
+                        pv.setVisitContactNamet(rsMainHis2.getString("MNC_COM_DSC"));
+                        pv.docCD = rsmainhis.getString("mnc_doc_cd");
+                        
+//                        pv.setDiscount(rsmainhis.getDouble("mnc_dis_tot"));
+                        
+                        pv.setPaid(Double.parseDouble(rsmainhis.getString("mnc_pay_cash")));
+                        pv.setAmount(Double.parseDouble(rsmainhis.getString("mnc_sum_pri")));
+                        pv.setDiscount(Double.parseDouble("-"+rsmainhis.getString("mnc_dis_tot")));
+                        pv.setInvoiceNumber(rsmainhis.getString("mnc_doc_no"));
+                        
+//                        v_visit_paid = getPatientVisitPaid(branch.getBranchId(),visit_date,rsMainHis2.getString("mnc_hn_no"), 
+//                                rsMainHis2.getString("mnc_vn_no")+"."+rsMainHis2.getString("mnc_vn_seq"));
+//                        if(v_visit_paid.size()>0){
+//                            patientvisitpaid = new PatientVisitPaid();
+//                            patientvisitpaid = (PatientVisitPaid)v_visit_paid.get(0);
+//                            pv.setPaid(patientvisitpaid.getPaid());
+//                            pv.setAmount(patientvisitpaid.getAmount());
+//                            pv.setDiscount(patientvisitpaid.discount);
+//                        }
+                        
+                        if(rsMainHis2.getString("mnc_adm_flg").equals("A")){
+                            pv.setFVisitTypeId("1");
+                        }else{
+                            pv.setFVisitTypeId("0");
+                        }
+                    }
+                    rsMainHis2.close();
+                        
+                        //patient_visit.setVisitClinicNamet(rsmainhis.getString("MNC_MD_DEP_DSC"));
+                    }
+                    error="05";
+                    vPatientVisit.add(pv);
+    //                string[] aaa = rsmainhis.getString("MNC_COM_DSC").split("\\,");
+    //                aaa[1]
+                }catch(Exception ex){
+                    Logger.getLogger(Config1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            rsmainhis.close();
+            connmainhis.close();
+            connmainhis2.close();
+            conn_paid.close();
+        }catch (Exception ex) {
+            Logger.getLogger(Config1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return vPatientVisit;
+    }
+}

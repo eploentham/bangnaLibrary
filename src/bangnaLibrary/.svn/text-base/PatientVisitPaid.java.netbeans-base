@@ -1,0 +1,70 @@
+package bangnaLibrary;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+
+/**
+ *
+ * @author pop
+ */
+public class PatientVisitPaid extends Patient {
+    private String paid_id="", paid_namet="", paid_Date="", vn_id="", item_id="", item_namet="";
+    private Double amount=0.0, paid=0.0;
+    public void initial(){
+        paid_id=""; paid_namet=""; paid_Date=""; vn_id=""; item_id=""; item_namet="";
+        amount=0.0;paid=0.0;
+    }
+    public String getPaidId() {
+        return paid_id;
+    }
+    public void setPaidId(String fn_id) {
+        this.paid_id = fn_id;
+    }
+    public String getPaidNamet() {
+        return paid_namet;
+    }
+    public void setPaidNamet(String paid_namet) {
+        this.paid_namet = paid_namet;
+    }
+    public String getPaidDate() {
+        return paid_Date;
+    }
+    public void setPaidDate(String paid_Date) {
+        this.paid_Date = paid_Date;
+    }
+    public Double getAmount() {
+        return amount;
+    }
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+    public Double getPaid() {
+        return paid;
+    }
+    public void setPaid(Double paid) {
+        this.paid = paid;
+    }
+    public void setVnId(String vn_id) {
+        this.vn_id = vn_id;
+    }
+    public String getVnId() {
+        return vn_id;
+    }
+    public void setItemId(String item_id) {
+        this.item_id = item_id;
+    }
+    public String getItemId() {
+        return item_id;
+    }
+    public void setItemNamet(String item_namet) {
+        this.item_namet = item_namet;
+    }
+    public String getItemNamet() {
+        return item_namet;
+    }
+
+}

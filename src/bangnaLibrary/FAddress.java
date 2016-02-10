@@ -1,0 +1,157 @@
+package bangnaLibrary;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+
+import com.bangna.usecase.connection.Persistent;
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author pop
+ */
+//@Entity
+//@Table(name = "f_address", catalog = "hospital_osv3", schema = "public")
+//@NamedQueries({@NamedQuery(name = "FAddress.findAll", query = "SELECT f FROM FAddress f"), @NamedQuery(name = "FAddress.findByFAddressId", query = "SELECT f FROM FAddress f WHERE f.fAddressId = :fAddressId"), @NamedQuery(name = "FAddress.findByAddressDescription", query = "SELECT f FROM FAddress f WHERE f.addressDescription = :addressDescription"), @NamedQuery(name = "FAddress.findByAddressTambonType", query = "SELECT f FROM FAddress f WHERE f.addressTambonType = :addressTambonType"), @NamedQuery(name = "FAddress.findByAddressAmphurId", query = "SELECT f FROM FAddress f WHERE f.addressAmphurId = :addressAmphurId"), @NamedQuery(name = "FAddress.findByAddressChangwatId", query = "SELECT f FROM FAddress f WHERE f.addressChangwatId = :addressChangwatId"), @NamedQuery(name = "FAddress.findByAddressRegion", query = "SELECT f FROM FAddress f WHERE f.addressRegion = :addressRegion")})
+public class FAddress extends Persistent {
+//    private static final long serialVersionUID = 1L;
+//    @Id
+//    @Basic(optional = false)
+//    @Column(name = "f_address_id", nullable = false, length = 255)
+    public String fAddressId="";
+    public String addressDescription="";
+    public String addressTambonType="";
+    public String addressAmphurId="";
+    public String addressChangwatId="";
+    public String addressRegion="";
+    public String addressDescriptione="";
+
+    public FAddress() {
+    }
+    public void initial(){
+        fAddressId="";
+        addressDescription="";
+        addressTambonType="";
+        addressAmphurId="";
+        addressChangwatId="";
+        addressRegion="";
+        addressDescriptione="";
+    }
+    public String getFAddress() {
+        return "f_address";
+    }
+    public String getFFAddressId() {
+        return "f_address_id";
+    }
+    public String getFAddressDescription() {
+        return "address_description";
+    }
+    public String getFAddressTambonType() {
+        return "address_tambon_type";
+    }
+    public String getFAddressAmphurId() {
+        return "address_amphur_id";
+    }
+    public String getFAddressChangwatId() {
+        return "address_changwat_id";
+    }
+    public String getFAddressRegion() {
+        return "address_region";
+    }
+    public String getFAddressDescriptione() {
+        return "address_descriptione";
+    }
+
+    public FAddress(String fAddressId) {
+        this.fAddressId = fAddressId;
+    }
+
+    public String getFAddressId() {
+        return fAddressId;
+    }
+
+    public void setFAddressId(String fAddressId) {
+        this.fAddressId = fAddressId;
+    }
+
+    public String getAddressDescription() {
+        return addressDescription;
+    }
+    public void setAddressDescription(String addressDescription) {
+        this.addressDescription = addressDescription;
+    }
+
+    public String getAddressTambonType() {
+        return addressTambonType;
+    }
+
+    public void setAddressTambonType(String addressTambonType) {
+        this.addressTambonType = addressTambonType;
+    }
+
+    public String getAddressAmphurId() {
+        return addressAmphurId;
+    }
+
+    public void setAddressAmphurId(String addressAmphurId) {
+        this.addressAmphurId = addressAmphurId;
+    }
+
+    public String getAddressChangwatId() {
+        return addressChangwatId;
+    }
+    public void setAddressChangwatId(String addressChangwatId) {
+        this.addressChangwatId = addressChangwatId;
+    }
+
+    public String getAddressRegion() {
+        return addressRegion;
+    }
+    public void setAddressRegion(String addressRegion) {
+        this.addressRegion = addressRegion;
+    }
+
+    public String getAddressDescriptione() {
+        return addressDescriptione;
+    }
+    public void setAddressDescriptione(String addressDescriptione) {
+        this.addressDescriptione = addressDescriptione;
+    }
+
+//    @Override
+//    public int hashCode() {
+//        int hash = 0;
+//        hash += (fAddressId != null ? fAddressId.hashCode() : 0);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object object) {
+//        // TODO: Warning - this method won't work in the case the id fields are not set
+//        if (!(object instanceof FAddress)) {
+//            return false;
+//        }
+//        FAddress other = (FAddress) object;
+//        if ((this.fAddressId == null && other.fAddressId != null) || (this.fAddressId != null && !this.fAddressId.equals(other.fAddressId))) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+//    @Override
+    public String toString() {
+        return addressDescription;
+    }
+
+}

@@ -1,0 +1,626 @@
+package com.bangna.object;
+
+import com.bangna.usecase.connection.Persistent;
+//import java.io.Serializable;
+//import javax.persistence.Basic;
+//import javax.persistence.Column;
+//import javax.persistence.Entity;
+//import javax.persistence.Id;
+//import javax.persistence.NamedQueries;
+//import javax.persistence.Table;
+
+//@Entity
+//@Table(name="back_t_patient_visit_contact_billing_item", catalog="bangna", schema="public")
+//@NamedQueries({@javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findAll", query="SELECT b FROM BackTPatientVisitContactBillingItem b"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitContactBillingItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitContactBillingItemId = :patientVisitContactBillingItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitContactItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitContactItemId = :patientVisitContactItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitId = :patientVisitId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTPatientId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tPatientId = :tPatientId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByVisitId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.visitId = :visitId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBillingInvoiceNumber", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.billingInvoiceNumber = :billingInvoiceNumber"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTBillingInvoiceDateTime", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tBillingInvoiceDateTime = :tBillingInvoiceDateTime"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTBillingInvoiceTime", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tBillingInvoiceTime = :tBillingInvoiceTime"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBillingInvoiceItemActive", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.billingInvoiceItemActive = :billingInvoiceItemActive"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBillingInvoiceItemTotal", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.billingInvoiceItemTotal = :billingInvoiceItemTotal"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTBillingId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tBillingId = :tBillingId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTPaymentId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tPaymentId = :tPaymentId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByVisitVn", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.visitVn = :visitVn"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTOrderItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tOrderItemId = :tOrderItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTBillingInvoiceItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tBillingInvoiceItemId = :tBillingInvoiceItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.bItemId = :bItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByTBillingInvoiceItemNamet", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.tBillingInvoiceItemNamet = :tBillingInvoiceItemNamet"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBItemBillingSubgroupId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.bItemBillingSubgroupId = :bItemBillingSubgroupId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByVisitPatientSelfDoctor", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.visitPatientSelfDoctor = :visitPatientSelfDoctor"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByDepartmnetId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.departmnetId = :departmnetId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByDepartmentNamet", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.departmentNamet = :departmentNamet"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByClaimId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.claimId = :claimId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByClaimNamet", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.claimNamet = :claimNamet"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByVisitHn", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.visitHn = :visitHn"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByBranchId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.branchId = :branchId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findBySysStatus", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.sysStatus = :sysStatus"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitItemId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitItemId = :patientVisitItemId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByItemTotal", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.itemTotal = :itemTotal"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByItemDiscount", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.itemDiscount = :itemDiscount"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByItemPaid", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.itemPaid = :itemPaid"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByEditStatus", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.editStatus = :editStatus"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByRecordStatus", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.recordStatus = :recordStatus"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitContactId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitContactId = :patientVisitContactId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitContactBillingId", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitContactBillingId = :patientVisitContactBillingId"), @javax.persistence.NamedQuery(name="BackTPatientVisitContactBillingItem.findByPatientVisitContactBillingItemActive", query="SELECT b FROM BackTPatientVisitContactBillingItem b WHERE b.patientVisitContactBillingItemActive = :patientVisitContactBillingItemActive")})
+public class BackTPatientVisitContactBillingItem extends Persistent{
+//  private static final long serialVersionUID = 1L;
+//
+//  @Id
+//  @Basic(optional=false)
+//  @Column(name="patient_visit_contact_billing_item_id", nullable=false, length=255)
+  private String patientVisitContactBillingItemId = "";
+//  @Column(name="patient_visit_contact_item_id", length=255)
+  private String patientVisitContactItemId = "";
+//  @Column(name="patient_visit_id", length=255)
+  private String patientVisitId = "";
+//  @Column(name="t_patient_id", length=255)
+  private String tPatientId = "";
+//  @Column(name="visit_id", length=255)
+  private String visitId = "";
+//  @Column(name="billing_invoice_number", length=255)
+  private String billingInvoiceNumber = "";
+//  @Column(name="t_billing_invoice_date_time", length=255)
+  private String tBillingInvoiceDateTime = "";
+//  @Column(name="t_billing_invoice_time", length=255)
+  private String tBillingInvoiceTime = "";
+//  @Column(name="billing_invoice_item_active", length=255)
+  private String billingInvoiceItemActive = "";
+//  @Column(name="billing_invoice_item_total", precision=17, scale=17)
+  private Double billingInvoiceItemTotal = Double.valueOf(0.0D);
+//  @Column(name="t_billing_id", length=255)
+  private String tBillingId = "";
+//  @Column(name="t_payment_id", length=255)
+  private String tPaymentId = "";
+//  @Column(name="visit_vn", length=255)
+  private String visitVn = "";
+//  @Column(name="t_order_item_id", length=255)
+  private String tOrderItemId = "";
+//  @Column(name="t_billing_invoice_item_id", length=255)
+  private String tBillingInvoiceItemId = "";
+//  @Column(name="b_item_id", length=255)
+  private String bItemId = "";
+//  @Column(name="t_billing_invoice_item_namet", length=255)
+  private String tBillingInvoiceItemNamet = "";
+//  @Column(name="b_item_billing_subgroup_id", length=255)
+  private String bItemBillingSubgroupId = "";
+//  @Column(name="visit_patient_self_doctor", length=255)
+  private String visitPatientSelfDoctor = "";
+//  @Column(name="departmnet_id", length=255)
+  private String departmentId = "";
+//  @Column(name="department_namet", length=255)
+  private String departmentNamet = "";
+//  @Column(name="claim_id", length=255)
+  private String claimId = "";
+//  @Column(name="claim_namet", length=255)
+  private String claimNamet = "";
+//  @Column(name="visit_hn", length=255)
+  private String visitHn = "";
+//  @Column(name="branch_id", length=255)
+  private String branchId = "";
+//  @Column(name="sys_status", length=255)
+  private String sysStatus = "";
+//  @Column(name="patient_visit_item_id", length=255)
+  private String patientVisitItemId = "";
+//  @Column(name="item_total", precision=17, scale=17)
+  private Double itemTotal = Double.valueOf(0.0D);
+//  @Column(name="item_discount", precision=17, scale=17)
+  private Double itemDiscount = Double.valueOf(0.0D);
+//  @Column(name="item_paid", precision=17, scale=17)
+  private Double itemPaid = Double.valueOf(0.0D);
+//  @Column(name="edit_status", length=255)
+  private String editStatus = "";
+//  @Column(name="record_status", length=255)
+  private String recordStatus = "";
+//  @Column(name="patient_visit_contact_id", length=255)
+  private String patientVisitContactId = "";
+//  @Column(name="patient_visit_contact_billing_id", length=255)
+  private String patientVisitContactBillingId = "";
+//  @Column(name="patient_visit_contact_billing_item_active", length=255)
+  private String patientVisitContactBillingItemActive = "";
+//  @Column(name="code", length=255)
+  private String code = "";
+//  @Column(name="node", length=255)
+  private String node = "";
+//  @Column(name="sort_line1", length=255)
+  private Double sortLine1 = Double.valueOf(0.0D);
+//  @Column(name="sort_line2", length=255)
+  private Double sortLine2 = Double.valueOf(0.0D);
+//  @Column(name="sort_line3", length=255)
+  private Double sortLine3 = Double.valueOf(0.0D);
+//  @Column(name="sort_line4", length=255)
+  private Double sortLine4 = Double.valueOf(0.0D);
+//  @Column(name="sort_line5", length=255)
+  private Double sortLine5 = Double.valueOf(0.0D);
+//  @Column(name="f_item_group_id", length=255)
+  private String fItemGroupId = "";
+//  @Column(name="doctor_id", length=255)
+  private String doctorId = "";
+//  @Column(name="space1", length=255)
+  private String space1 = "";
+
+  public BackTPatientVisitContactBillingItem(){
+  }
+
+  public String getBackTPatientVisitContactBillingItem() {
+    return "back_t_patient_visit_contact_billing_item";
+  }
+
+  public String getFPatientVisitContactBillingItemId() {
+    return "patient_visit_contact_billing_item_id";
+  }
+  public String getFPatientVisitContactItemId() {
+    return "patient_visit_contact_item_id";
+  }
+  public String getFPatientVisitId() {
+    return "patient_visit_id";
+  }
+  public String getFTPatientId() {
+    return "t_patient_id";
+  }
+  public String getFVisitId() {
+    return "visit_id";
+  }
+  public String getFBillingInvoiceNumber() {
+    return "billing_invoice_number";
+  }
+  public String getFTBillingInvoiceDateTime() {
+    return "t_billing_invoice_date_time";
+  }
+  public String getFTBillingInvoiceTime() {
+    return "t_billing_invoice_time";
+  }
+  public String getFBillingInvoiceItemActive() {
+    return "billing_invoice_item_active";
+  }
+  public String getFBillingInvoiceItemTotal() {
+    return "billing_invoice_item_total";
+  }
+  public String getFTBillingId() {
+    return "t_billing_id";
+  }
+  public String getFTPaymentId() {
+    return "t_payment_id";
+  }
+  public String getFVisitVn() {
+    return "visit_vn";
+  }
+  public String getFTOrderItemId() {
+    return "t_order_item_id";
+  }
+  public String getFTBillingInvoiceItemId() {
+    return "t_billing_invoice_item_id";
+  }
+  public String getFBItemId() {
+    return "b_item_id";
+  }
+  public String getFTBillingInvoiceItemNamet() {
+    return "t_billing_invoice_item_namet";
+  }
+  public String getFBItemBillingSubgroupId() {
+    return "b_item_billing_subgroup_id";
+  }
+  public String getFVisitPatientSelfDoctor() {
+    return "visit_patient_self_doctor";
+  }
+  public String getFDepartmentId() {
+    return "department_id";
+  }
+  public String getFDepartmentNamet() {
+    return "department_namet";
+  }
+  public String getFClaimId() {
+    return "claim_id";
+  }
+  public String getFClaimNamet() {
+    return "claim_namet";
+  }
+  public String getFVisitHn() {
+    return "visit_hn";
+  }
+  public String getFBranchId() {
+    return "branch_id";
+  }
+  public String getFSysStatus() {
+    return "sys_status";
+  }
+  public String getFPatientVisitItemId() {
+    return "patient_visit_item_id";
+  }
+  public String getFItemTotal() {
+    return "item_total";
+  }
+  public String getFItemDiscount() {
+    return "item_discount";
+  }
+  public String getFItemPaid() {
+    return "item_paid";
+  }
+  public String getFEditStatus() {
+    return "edit_status";
+  }
+  public String getFRecordStatus() {
+    return "record_status";
+  }
+  public String getFPatientVisitContactId() {
+    return "patient_visit_contact_id";
+  }
+  public String getFPatientVisitContactBillingId() {
+    return "patient_visit_contact_billing_id";
+  }
+  public String getFPatientVisitContactBillingItemActive() {
+    return "patient_visit_contact_billing_item_active";
+  }
+  public String getFCode() {
+    return "code";
+  }
+  public String getFNode() {
+    return "node";
+  }
+  public String getFSortLine1() {
+    return "sort_line1";
+  }
+  public String getFSortLine2() {
+    return "sort_line2";
+  }
+  public String getFSortLine3() {
+    return "sort_line3";
+  }
+  public String getFSortLine4() {
+    return "sort_line4";
+  }
+  public String getFSortLine5() {
+    return "sort_line5";
+  }
+  public String getFFItemGroupId() {
+    return "f_item_group_id";
+  }
+  public String getFDoctorId() {
+    return "doctor_id";
+  }
+
+  public BackTPatientVisitContactBillingItem(String patientVisitContactBillingItemId) {
+    this.patientVisitContactBillingItemId = patientVisitContactBillingItemId;
+  }
+
+  public String getPatientVisitContactBillingItemId() {
+    return this.patientVisitContactBillingItemId;
+  }
+
+  public void setPatientVisitContactBillingItemId(String patientVisitContactBillingItemId) {
+    this.patientVisitContactBillingItemId = patientVisitContactBillingItemId;
+  }
+
+  public String getPatientVisitContactItemId() {
+    return this.patientVisitContactItemId;
+  }
+
+  public void setPatientVisitContactItemId(String patientVisitContactItemId) {
+    this.patientVisitContactItemId = patientVisitContactItemId;
+  }
+
+  public String getPatientVisitId() {
+    return this.patientVisitId;
+  }
+
+  public void setPatientVisitId(String patientVisitId) {
+    this.patientVisitId = patientVisitId;
+  }
+
+  public String getTPatientId() {
+    return this.tPatientId;
+  }
+
+  public void setTPatientId(String tPatientId) {
+    this.tPatientId = tPatientId;
+  }
+
+  public String getVisitId() {
+    return this.visitId;
+  }
+
+  public void setVisitId(String visitId) {
+    this.visitId = visitId;
+  }
+
+  public String getBillingInvoiceNumber() {
+    return this.billingInvoiceNumber;
+  }
+
+  public void setBillingInvoiceNumber(String billingInvoiceNumber) {
+    this.billingInvoiceNumber = billingInvoiceNumber;
+  }
+
+  public String getTBillingInvoiceDateTime() {
+    return this.tBillingInvoiceDateTime;
+  }
+
+  public void setTBillingInvoiceDateTime(String tBillingInvoiceDateTime) {
+    this.tBillingInvoiceDateTime = tBillingInvoiceDateTime;
+  }
+
+  public String getTBillingInvoiceTime() {
+    return this.tBillingInvoiceTime;
+  }
+
+  public void setTBillingInvoiceTime(String tBillingInvoiceTime) {
+    this.tBillingInvoiceTime = tBillingInvoiceTime;
+  }
+
+  public String getBillingInvoiceItemActive() {
+    return this.billingInvoiceItemActive;
+  }
+
+  public void setBillingInvoiceItemActive(String billingInvoiceItemActive) {
+    this.billingInvoiceItemActive = billingInvoiceItemActive;
+  }
+
+  public Double getBillingInvoiceItemTotal() {
+    return this.billingInvoiceItemTotal;
+  }
+
+  public void setBillingInvoiceItemTotal(Double billingInvoiceItemTotal) {
+    this.billingInvoiceItemTotal = billingInvoiceItemTotal;
+  }
+
+  public String getTBillingId() {
+    return this.tBillingId;
+  }
+
+  public void setTBillingId(String tBillingId) {
+    this.tBillingId = tBillingId;
+  }
+
+  public String getTPaymentId() {
+    return this.tPaymentId;
+  }
+
+  public void setTPaymentId(String tPaymentId) {
+    this.tPaymentId = tPaymentId;
+  }
+
+  public String getVisitVn() {
+    return this.visitVn;
+  }
+
+  public void setVisitVn(String visitVn) {
+    this.visitVn = visitVn;
+  }
+
+  public String getTOrderItemId() {
+    return this.tOrderItemId;
+  }
+
+  public void setTOrderItemId(String tOrderItemId) {
+    this.tOrderItemId = tOrderItemId;
+  }
+
+  public String getTBillingInvoiceItemId() {
+    return this.tBillingInvoiceItemId;
+  }
+
+  public void setTBillingInvoiceItemId(String tBillingInvoiceItemId) {
+    this.tBillingInvoiceItemId = tBillingInvoiceItemId;
+  }
+
+  public String getBItemId() {
+    return this.bItemId;
+  }
+
+  public void setBItemId(String bItemId) {
+    this.bItemId = bItemId;
+  }
+
+  public String getTBillingInvoiceItemNamet() {
+    return this.tBillingInvoiceItemNamet;
+  }
+
+  public void setTBillingInvoiceItemNamet(String tBillingInvoiceItemNamet) {
+    this.tBillingInvoiceItemNamet = tBillingInvoiceItemNamet;
+  }
+
+  public String getBItemBillingSubgroupId() {
+    return this.bItemBillingSubgroupId;
+  }
+
+  public void setBItemBillingSubgroupId(String bItemBillingSubgroupId) {
+    this.bItemBillingSubgroupId = bItemBillingSubgroupId;
+  }
+
+  public String getVisitPatientSelfDoctor() {
+    return this.visitPatientSelfDoctor;
+  }
+
+  public void setVisitPatientSelfDoctor(String visitPatientSelfDoctor) {
+    this.visitPatientSelfDoctor = visitPatientSelfDoctor;
+  }
+
+  public String getDepartmentId() {
+    return this.departmentId;
+  }
+
+  public void setDepartmentId(String departmentId) {
+    this.departmentId = departmentId;
+  }
+
+  public String getDepartmentNamet() {
+    return this.departmentNamet;
+  }
+
+  public void setDepartmentNamet(String departmentNamet) {
+    this.departmentNamet = departmentNamet;
+  }
+
+  public String getClaimId() {
+    return this.claimId;
+  }
+
+  public void setClaimId(String claimId) {
+    this.claimId = claimId;
+  }
+
+  public String getClaimNamet() {
+    return this.claimNamet;
+  }
+
+  public void setClaimNamet(String claimNamet) {
+    this.claimNamet = claimNamet;
+  }
+
+  public String getVisitHn() {
+    return this.visitHn;
+  }
+
+  public void setVisitHn(String visitHn) {
+    this.visitHn = visitHn;
+  }
+
+  public String getBranchId() {
+    return this.branchId;
+  }
+
+  public void setBranchId(String branchId) {
+    this.branchId = branchId;
+  }
+
+  public String getSysStatus() {
+    return this.sysStatus;
+  }
+
+  public void setSysStatus(String sysStatus) {
+    this.sysStatus = sysStatus;
+  }
+
+  public String getPatientVisitItemId() {
+    return this.patientVisitItemId;
+  }
+
+  public void setPatientVisitItemId(String patientVisitItemId) {
+    this.patientVisitItemId = patientVisitItemId;
+  }
+
+  public Double getItemTotal() {
+    return this.itemTotal;
+  }
+
+  public void setItemTotal(Double itemTotal) {
+    this.itemTotal = itemTotal;
+  }
+
+  public Double getItemDiscount() {
+    return this.itemDiscount;
+  }
+
+  public void setItemDiscount(Double itemDiscount) {
+    this.itemDiscount = itemDiscount;
+  }
+
+  public Double getItemPaid() {
+    return this.itemPaid;
+  }
+
+  public void setItemPaid(Double itemPaid) {
+    this.itemPaid = itemPaid;
+  }
+
+  public String getEditStatus() {
+    return this.editStatus;
+  }
+
+  public void setEditStatus(String editStatus) {
+    this.editStatus = editStatus;
+  }
+
+  public String getRecordStatus() {
+    return this.recordStatus;
+  }
+
+  public void setRecordStatus(String recordStatus) {
+    this.recordStatus = recordStatus;
+  }
+
+  public String getPatientVisitContactId() {
+    return this.patientVisitContactId;
+  }
+
+  public void setPatientVisitContactId(String patientVisitContactId) {
+    this.patientVisitContactId = patientVisitContactId;
+  }
+
+  public String getPatientVisitContactBillingId() {
+    return this.patientVisitContactBillingId;
+  }
+
+  public void setPatientVisitContactBillingId(String patientVisitContactBillingId) {
+    this.patientVisitContactBillingId = patientVisitContactBillingId;
+  }
+
+  public String getPatientVisitContactBillingItemActive() {
+    return this.patientVisitContactBillingItemActive;
+  }
+
+  public void setPatientVisitContactBillingItemActive(String patientVisitContactBillingItemActive) {
+    this.patientVisitContactBillingItemActive = patientVisitContactBillingItemActive;
+  }
+
+  public String getCode() {
+    return this.code;
+  }
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public String getNode() {
+    return this.node;
+  }
+  public void setNode(String node) {
+    this.node = node;
+  }
+
+  public Double getSortLine1() {
+    return this.sortLine1;
+  }
+  public void setSortLine1(Double sortLine1) {
+    this.sortLine1 = sortLine1;
+  }
+
+  public Double getSortLine2() {
+    return this.sortLine2;
+  }
+  public void setSortLine2(Double sortLine2) {
+    this.sortLine2 = sortLine2;
+  }
+
+  public Double getSortLine3() {
+    return this.sortLine3;
+  }
+  public void setSortLine3(Double sortLine3) {
+    this.sortLine3 = sortLine3;
+  }
+
+  public Double getSortLine4() {
+    return this.sortLine4;
+  }
+  public void setSortLine4(Double sortLine4) {
+    this.sortLine4 = sortLine4;
+  }
+
+  public Double getSortLine5() {
+    return this.sortLine5;
+  }
+  public void setSortLine5(Double sortLine5) {
+    this.sortLine5 = sortLine5;
+  }
+
+  public String getFItemGroupId() {
+    return this.fItemGroupId;
+  }
+  public void setFItemGroupId(String fItemGroupId) {
+    this.fItemGroupId = fItemGroupId;
+  }
+
+  public String getDoctorId() {
+    return this.doctorId;
+  }
+  public void setDoctorId(String doctorId) {
+    this.doctorId = doctorId;
+  }
+
+  public String getSpace1() {
+    return this.space1;
+  }
+  public void setSpace1(String space1) {
+    this.space1 = space1;
+  }
+
+  public int hashCode()
+  {
+    int hash = 0;
+    hash += (this.patientVisitContactBillingItemId != null ? this.patientVisitContactBillingItemId.hashCode() : 0);
+    return hash;
+  }
+
+  public boolean equals(Object object)
+  {
+    if (!(object instanceof BackTPatientVisitContactBillingItem)) {
+      return false;
+    }
+    BackTPatientVisitContactBillingItem other = (BackTPatientVisitContactBillingItem)object;
+
+    return ((this.patientVisitContactBillingItemId != null) || (other.patientVisitContactBillingItemId == null)) && ((this.patientVisitContactBillingItemId == null) || (this.patientVisitContactBillingItemId.equals(other.patientVisitContactBillingItemId)));
+  }
+
+  public String toString()
+  {
+    return "bangnaadmin.BackTPatientVisitContactBillingItem[patientVisitContactBillingItemId=" + this.patientVisitContactBillingItemId + "]";
+  }
+}

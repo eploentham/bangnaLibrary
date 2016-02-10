@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/bangna/!svn/ver/737/bangnaLibrary/src/com/bangna/usecase/connection
+END
+ConnectionInf2.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/ConnectionInf2.java
+END
+ConstantMain.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/ConstantMain.java
+END
+DBConnection.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/DBConnection.java
+END
+ConnectionDBMgr.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/bangna/!svn/ver/737/bangnaLibrary/src/com/bangna/usecase/connection/ConnectionDBMgr.java
+END
+Persistent.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/bangna/!svn/ver/520/bangnaLibrary/src/com/bangna/usecase/connection/Persistent.java
+END
+CommonInf.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/bangna/!svn/ver/375/bangnaLibrary/src/com/bangna/usecase/connection/CommonInf.java
+END
+IOStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/IOStream.java
+END
+ConnectionDBMgr1.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/ConnectionDBMgr1.java
+END
+Constant.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/Constant.java
+END
+ConnectionInf.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/bangna/!svn/ver/537/bangnaLibrary/src/com/bangna/usecase/connection/ConnectionInf.java
+END
+Test.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/bangna/!svn/ver/712/bangnaLibrary/src/com/bangna/usecase/connection/Test.java
+END
+dTimer.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/bangna/!svn/ver/703/bangnaLibrary/src/com/bangna/usecase/connection/dTimer.java
+END

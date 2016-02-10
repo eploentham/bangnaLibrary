@@ -1,0 +1,902 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package bangnaLibrary;
+
+import com.bangna.usecase.connection.Persistent;
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author root
+ */
+//@Entity
+//@Table(name = "v_visit", catalog = "front_bangna5", schema = "public")
+//@NamedQueries({
+//    @NamedQuery(name = "VVisit.findAll", query = "SELECT v FROM VVisit v"),
+//    @NamedQuery(name = "VVisit.findByTVisitId", query = "SELECT v FROM VVisit v WHERE v.tVisitId = :tVisitId"),
+//    @NamedQuery(name = "VVisit.findByVisitHn", query = "SELECT v FROM VVisit v WHERE v.visitHn = :visitHn"),
+//    @NamedQuery(name = "VVisit.findByVisitVn", query = "SELECT v FROM VVisit v WHERE v.visitVn = :visitVn"),
+//    @NamedQuery(name = "VVisit.findByFVisitTypeId", query = "SELECT v FROM VVisit v WHERE v.fVisitTypeId = :fVisitTypeId"),
+//    @NamedQuery(name = "VVisit.findByVisitBeginVisitTime", query = "SELECT v FROM VVisit v WHERE v.visitBeginVisitTime = :visitBeginVisitTime"),
+//    @NamedQuery(name = "VVisit.findByVisitFinancialDischargeTime", query = "SELECT v FROM VVisit v WHERE v.visitFinancialDischargeTime = :visitFinancialDischargeTime"),
+//    @NamedQuery(name = "VVisit.findByVisitNotice", query = "SELECT v FROM VVisit v WHERE v.visitNotice = :visitNotice"),
+//    @NamedQuery(name = "VVisit.findByBVisitOfficeIdReferIn", query = "SELECT v FROM VVisit v WHERE v.bVisitOfficeIdReferIn = :bVisitOfficeIdReferIn"),
+//    @NamedQuery(name = "VVisit.findByBVisitOfficeIdReferOut", query = "SELECT v FROM VVisit v WHERE v.bVisitOfficeIdReferOut = :bVisitOfficeIdReferOut"),
+//    @NamedQuery(name = "VVisit.findByVisitDiagnosisNotice", query = "SELECT v FROM VVisit v WHERE v.visitDiagnosisNotice = :visitDiagnosisNotice"),
+//    @NamedQuery(name = "VVisit.findByFVisitOpdDischargeStatusId", query = "SELECT v FROM VVisit v WHERE v.fVisitOpdDischargeStatusId = :fVisitOpdDischargeStatusId"),
+//    @NamedQuery(name = "VVisit.findByFVisitIpdDischargeTypeId", query = "SELECT v FROM VVisit v WHERE v.fVisitIpdDischargeTypeId = :fVisitIpdDischargeTypeId"),
+//    @NamedQuery(name = "VVisit.findByFVisitIpdDischargeStatusId", query = "SELECT v FROM VVisit v WHERE v.fVisitIpdDischargeStatusId = :fVisitIpdDischargeStatusId"),
+//    @NamedQuery(name = "VVisit.findByVisitLocking", query = "SELECT v FROM VVisit v WHERE v.visitLocking = :visitLocking"),
+//    @NamedQuery(name = "VVisit.findByVisitStaffLock", query = "SELECT v FROM VVisit v WHERE v.visitStaffLock = :visitStaffLock"),
+//    @NamedQuery(name = "VVisit.findByVisitLockDateTime", query = "SELECT v FROM VVisit v WHERE v.visitLockDateTime = :visitLockDateTime"),
+//    @NamedQuery(name = "VVisit.findByFVisitStatusId", query = "SELECT v FROM VVisit v WHERE v.fVisitStatusId = :fVisitStatusId"),
+//    @NamedQuery(name = "VVisit.findByVisitPregnant", query = "SELECT v FROM VVisit v WHERE v.visitPregnant = :visitPregnant"),
+//    @NamedQuery(name = "VVisit.findByBVisitClinicId", query = "SELECT v FROM VVisit v WHERE v.bVisitClinicId = :bVisitClinicId"),
+//    @NamedQuery(name = "VVisit.findByBVisitWardId", query = "SELECT v FROM VVisit v WHERE v.bVisitWardId = :bVisitWardId"),
+//    @NamedQuery(name = "VVisit.findByVisitBed", query = "SELECT v FROM VVisit v WHERE v.visitBed = :visitBed"),
+//    @NamedQuery(name = "VVisit.findByVisitObserve", query = "SELECT v FROM VVisit v WHERE v.visitObserve = :visitObserve"),
+//    @NamedQuery(name = "VVisit.findByVisitPatientType", query = "SELECT v FROM VVisit v WHERE v.visitPatientType = :visitPatientType"),
+//    @NamedQuery(name = "VVisit.findByVisitQueue", query = "SELECT v FROM VVisit v WHERE v.visitQueue = :visitQueue"),
+//    @NamedQuery(name = "VVisit.findByBServicePointId", query = "SELECT v FROM VVisit v WHERE v.bServicePointId = :bServicePointId"),
+//    @NamedQuery(name = "VVisit.findByVisitStaffObserve", query = "SELECT v FROM VVisit v WHERE v.visitStaffObserve = :visitStaffObserve"),
+//    @NamedQuery(name = "VVisit.findByVisitDx", query = "SELECT v FROM VVisit v WHERE v.visitDx = :visitDx"),
+//    @NamedQuery(name = "VVisit.findByVisitIpdDischargeStatus", query = "SELECT v FROM VVisit v WHERE v.visitIpdDischargeStatus = :visitIpdDischargeStatus"),
+//    @NamedQuery(name = "VVisit.findByVisitMoneyDischargeStatus", query = "SELECT v FROM VVisit v WHERE v.visitMoneyDischargeStatus = :visitMoneyDischargeStatus"),
+//    @NamedQuery(name = "VVisit.findByVisitDoctorDischargeStatus", query = "SELECT v FROM VVisit v WHERE v.visitDoctorDischargeStatus = :visitDoctorDischargeStatus"),
+//    @NamedQuery(name = "VVisit.findByTPatientId", query = "SELECT v FROM VVisit v WHERE v.tPatientId = :tPatientId"),
+//    @NamedQuery(name = "VVisit.findByVisitStaffFinancialDischarge", query = "SELECT v FROM VVisit v WHERE v.visitStaffFinancialDischarge = :visitStaffFinancialDischarge"),
+//    @NamedQuery(name = "VVisit.findByVisitStaffDoctorDischarge", query = "SELECT v FROM VVisit v WHERE v.visitStaffDoctorDischarge = :visitStaffDoctorDischarge"),
+//    @NamedQuery(name = "VVisit.findByVisitStaffDoctorDischargeDateTime", query = "SELECT v FROM VVisit v WHERE v.visitStaffDoctorDischargeDateTime = :visitStaffDoctorDischargeDateTime"),
+//    @NamedQuery(name = "VVisit.findByVisitAn", query = "SELECT v FROM VVisit v WHERE v.visitAn = :visitAn"),
+//    @NamedQuery(name = "VVisit.findByVisitDxStat", query = "SELECT v FROM VVisit v WHERE v.visitDxStat = :visitDxStat"),
+//    @NamedQuery(name = "VVisit.findByVisitBeginAdmitDateTime", query = "SELECT v FROM VVisit v WHERE v.visitBeginAdmitDateTime = :visitBeginAdmitDateTime"),
+//    @NamedQuery(name = "VVisit.findByVisitDenyAllergy", query = "SELECT v FROM VVisit v WHERE v.visitDenyAllergy = :visitDenyAllergy"),
+//    @NamedQuery(name = "VVisit.findByVisitFirstVisit", query = "SELECT v FROM VVisit v WHERE v.visitFirstVisit = :visitFirstVisit"),
+//    @NamedQuery(name = "VVisit.findByVisitPatientSelfDoctor", query = "SELECT v FROM VVisit v WHERE v.visitPatientSelfDoctor = :visitPatientSelfDoctor"),
+//    @NamedQuery(name = "VVisit.findByVisitPatientAge", query = "SELECT v FROM VVisit v WHERE v.visitPatientAge = :visitPatientAge"),
+//    @NamedQuery(name = "VVisit.findByVisitPcuService", query = "SELECT v FROM VVisit v WHERE v.visitPcuService = :visitPcuService"),
+//    @NamedQuery(name = "VVisit.findByVisitHospitalService", query = "SELECT v FROM VVisit v WHERE v.visitHospitalService = :visitHospitalService"),
+//    @NamedQuery(name = "VVisit.findByVisitLabStatusId", query = "SELECT v FROM VVisit v WHERE v.visitLabStatusId = :visitLabStatusId"),
+//    @NamedQuery(name = "VVisit.findByVisitNcd", query = "SELECT v FROM VVisit v WHERE v.visitNcd = :visitNcd"),
+//    @NamedQuery(name = "VVisit.findByBNcdGroupId", query = "SELECT v FROM VVisit v WHERE v.bNcdGroupId = :bNcdGroupId"),
+//    @NamedQuery(name = "VVisit.findByFReferCauseId", query = "SELECT v FROM VVisit v WHERE v.fReferCauseId = :fReferCauseId"),
+//    @NamedQuery(name = "VVisit.findByFEmergencyStatusId", query = "SELECT v FROM VVisit v WHERE v.fEmergencyStatusId = :fEmergencyStatusId"),
+//    @NamedQuery(name = "VVisit.findByVisitEmergencyStaff", query = "SELECT v FROM VVisit v WHERE v.visitEmergencyStaff = :visitEmergencyStaff"),
+//    @NamedQuery(name = "VVisit.findByVisitHaveAppointment", query = "SELECT v FROM VVisit v WHERE v.visitHaveAppointment = :visitHaveAppointment"),
+//    @NamedQuery(name = "VVisit.findByVisitHaveAdmit", query = "SELECT v FROM VVisit v WHERE v.visitHaveAdmit = :visitHaveAdmit"),
+//    @NamedQuery(name = "VVisit.findByVisitHaveRefer", query = "SELECT v FROM VVisit v WHERE v.visitHaveRefer = :visitHaveRefer"),
+//    @NamedQuery(name = "VVisit.findByTPatientAppointmentId", query = "SELECT v FROM VVisit v WHERE v.tPatientAppointmentId = :tPatientAppointmentId"),
+//    @NamedQuery(name = "VVisit.findByVisitCalDateAppointment", query = "SELECT v FROM VVisit v WHERE v.visitCalDateAppointment = :visitCalDateAppointment"),
+//    @NamedQuery(name = "VVisit.findByVisitCauseAppointment", query = "SELECT v FROM VVisit v WHERE v.visitCauseAppointment = :visitCauseAppointment"),
+//    @NamedQuery(name = "VVisit.findByBContractPlansId", query = "SELECT v FROM VVisit v WHERE v.bContractPlansId = :bContractPlansId"),
+//    @NamedQuery(name = "VVisit.findByContactId", query = "SELECT v FROM VVisit v WHERE v.contactId = :contactId"),
+//    @NamedQuery(name = "VVisit.findByContactNamet", query = "SELECT v FROM VVisit v WHERE v.contactNamet = :contactNamet"),
+//    @NamedQuery(name = "VVisit.findByContactJoinId", query = "SELECT v FROM VVisit v WHERE v.contactJoinId = :contactJoinId"),
+//    @NamedQuery(name = "VVisit.findByContactJoinNamet", query = "SELECT v FROM VVisit v WHERE v.contactJoinNamet = :contactJoinNamet"),
+//    @NamedQuery(name = "VVisit.findBySurveillanceCaseId", query = "SELECT v FROM VVisit v WHERE v.surveillanceCaseId = :surveillanceCaseId"),
+//    @NamedQuery(name = "VVisit.findByPatientPrefixDescription", query = "SELECT v FROM VVisit v WHERE v.patientPrefixDescription = :patientPrefixDescription"),
+//    @NamedQuery(name = "VVisit.findByPatientFirstname", query = "SELECT v FROM VVisit v WHERE v.patientFirstname = :patientFirstname"),
+//    @NamedQuery(name = "VVisit.findByPatientLastname", query = "SELECT v FROM VVisit v WHERE v.patientLastname = :patientLastname"),
+//    @NamedQuery(name = "VVisit.findByVisitBeginVisitDate", query = "SELECT v FROM VVisit v WHERE v.visitBeginVisitDate = :visitBeginVisitDate"),
+//    @NamedQuery(name = "VVisit.findByVisitFinancialDischargeDate", query = "SELECT v FROM VVisit v WHERE v.visitFinancialDischargeDate = :visitFinancialDischargeDate"),
+//    @NamedQuery(name = "VVisit.findByEmployeeFirstname", query = "SELECT v FROM VVisit v WHERE v.employeeFirstname = :employeeFirstname"),
+//    @NamedQuery(name = "VVisit.findByEmployeeLastname", query = "SELECT v FROM VVisit v WHERE v.employeeLastname = :employeeLastname"),
+//    @NamedQuery(name = "VVisit.findByNcdGroupDescription", query = "SELECT v FROM VVisit v WHERE v.ncdGroupDescription = :ncdGroupDescription"),
+//    @NamedQuery(name = "VVisit.findByReferCauseDescription", query = "SELECT v FROM VVisit v WHERE v.referCauseDescription = :referCauseDescription"),
+//    @NamedQuery(name = "VVisit.findByContractPlansDescription", query = "SELECT v FROM VVisit v WHERE v.contractPlansDescription = :contractPlansDescription"),
+//    @NamedQuery(name = "VVisit.findByVisitClinicDescription", query = "SELECT v FROM VVisit v WHERE v.visitClinicDescription = :visitClinicDescription")})
+public class VVisit extends Persistent {
+//    private static final long serialVersionUID = 1L;
+//    @Column(name = "t_visit_id", length = 255)
+    public String tVisitId="";
+//    @Column(name = "visit_hn", length = 255)
+    public String visitHn="";
+//    @Column(name = "visit_vn", length = 255)
+    public String visitVn="";
+//    @Column(name = "f_visit_type_id", length = 255)
+    public String fVisitTypeId="";
+//    @Column(name = "visit_begin_visit_time", length = 255)
+    public String visitBeginVisitTime="";
+//    @Column(name = "visit_financial_discharge_time", length = 255)
+    public String visitFinancialDischargeTime="";
+//    @Column(name = "visit_notice", length = 255)
+    public String visitNotice="";
+//    @Column(name = "b_visit_office_id_refer_in", length = 255)
+    public String bVisitOfficeIdReferIn="";
+//    @Column(name = "b_visit_office_id_refer_out", length = 255)
+    public String bVisitOfficeIdReferOut="";
+//    @Column(name = "visit_diagnosis_notice", length = 5000)
+    public String visitDiagnosisNotice="";
+//    @Column(name = "f_visit_opd_discharge_status_id", length = 255)
+    public String fVisitOpdDischargeStatusId="";
+//    @Column(name = "f_visit_ipd_discharge_type_id", length = 255)
+    public String fVisitIpdDischargeTypeId="";
+//    @Column(name = "f_visit_ipd_discharge_status_id", length = 255)
+    public String fVisitIpdDischargeStatusId="";
+//    @Column(name = "visit_locking", length = 255)
+    public String visitLocking="";
+//    @Column(name = "visit_staff_lock", length = 255)
+    public String visitStaffLock="";
+//    @Column(name = "visit_lock_date_time", length = 255)
+    public String visitLockDateTime="";
+//    @Column(name = "f_visit_status_id", length = 255)
+    public String fVisitStatusId="";
+//    @Column(name = "visit_pregnant", length = 255)
+    public String visitPregnant="";
+//    @Column(name = "b_visit_clinic_id", length = 255)
+    public String bVisitClinicId="";
+//    @Column(name = "b_visit_ward_id", length = 255)
+    public String bVisitWardId="";
+//    @Column(name = "visit_bed", length = 255)
+    public String visitBed="";
+//    @Column(name = "visit_observe", length = 255)
+    public String visitObserve="";
+//    @Column(name = "visit_patient_type", length = 255)
+    public String visitPatientType="";
+//    @Column(name = "visit_queue", length = 255)
+    public String visitQueue="";
+//    @Column(name = "b_service_point_id", length = 255)
+    public String bServicePointId="";
+//    @Column(name = "visit_staff_observe", length = 255)
+    public String visitStaffObserve="";
+//    @Column(name = "visit_dx", length = 255)
+    public String visitDx="";
+//    @Column(name = "visit_ipd_discharge_status", length = 255)
+    public String visitIpdDischargeStatus="";
+//    @Column(name = "visit_money_discharge_status", length = 255)
+    public String visitMoneyDischargeStatus="";
+//    @Column(name = "visit_doctor_discharge_status", length = 255)
+    public String visitDoctorDischargeStatus="";
+//    @Column(name = "t_patient_id", length = 255)
+    public String tPatientId="";
+//    @Column(name = "visit_staff_financial_discharge", length = 255)
+    public String visitStaffFinancialDischarge="";
+//    @Column(name = "visit_staff_doctor_discharge", length = 255)
+    public String visitStaffDoctorDischarge="";
+//    @Column(name = "visit_staff_doctor_discharge_date_time", length = 255)
+    public String visitStaffDoctorDischargeDateTime="";
+//    @Column(name = "visit_an", length = 255)
+    public String visitAn="";
+//    @Column(name = "visit_dx_stat", length = 255)
+    public String visitDxStat="";
+//    @Column(name = "visit_begin_admit_date_time", length = 255)
+    public String visitBeginAdmitDateTime="";
+//    @Column(name = "visit_deny_allergy", length = 255)
+    public String visitDenyAllergy="";
+//    @Column(name = "visit_first_visit", length = 255)
+    public String visitFirstVisit="";
+//    @Column(name = "visit_patient_self_doctor", length = 255)
+    public String visitPatientSelfDoctor="";
+//    @Column(name = "visit_patient_age", length = 255)
+    public String visitPatientAge="";
+//    @Column(name = "visit_pcu_service", length = 255)
+    public String visitPcuService="";
+//    @Column(name = "visit_hospital_service", length = 255)
+    public String visitHospitalService="";
+//    @Column(name = "visit_lab_status_id", length = 255)
+    public String visitLabStatusId="";
+//    @Column(name = "visit_ncd", length = 255)
+    public String visitNcd="";
+//    @Column(name = "b_ncd_group_id", length = 255)
+    public String bNcdGroupId="";
+//    @Column(name = "f_refer_cause_id", length = 255)
+    public String fReferCauseId="";
+//    @Column(name = "f_emergency_status_id", length = 255)
+    public String fEmergencyStatusId="";
+//    @Column(name = "visit_emergency_staff", length = 255)
+    public String visitEmergencyStaff="";
+//    @Column(name = "visit_have_appointment", length = 255)
+    public String visitHaveAppointment="";
+//    @Column(name = "visit_have_admit", length = 255)
+    public String visitHaveAdmit="";
+//    @Column(name = "visit_have_refer", length = 255)
+    public String visitHaveRefer="";
+//    @Column(name = "t_patient_appointment_id", length = 255)
+    public String tPatientAppointmentId="";
+//    @Column(name = "visit_cal_date_appointment", length = 255)
+    public String visitCalDateAppointment="";
+//    @Column(name = "visit_cause_appointment", length = 255)
+    public String visitCauseAppointment="";
+//    @Column(name = "b_contract_plans_id", length = 255)
+    public String bContractPlansId="";
+//    @Column(name = "contact_id", length = 255)
+    public String contactId="";
+//    @Column(name = "contact_namet", length = 255)
+    public String contactNamet="";
+//    @Column(name = "contact_join_id", length = 255)
+    public String contactJoinId="";
+//    @Column(name = "contact_join_namet", length = 255)
+    public String contactJoinNamet="";
+//    @Column(name = "surveillance_case_id", length = 255)
+    public String surveillanceCaseId="";
+//    @Column(name = "patient_prefix_description", length = 255)
+    public String patientPrefixDescription="";
+//    @Column(name = "patient_firstname", length = 255)
+    public String patientFirstname="";
+//    @Column(name = "patient_lastname", length = 255)
+    public String patientLastname="";
+//    @Column(name = "visit_begin_visit_date", length = 2147483647)
+    public String visitBeginVisitDate="";
+//    @Column(name = "visit_financial_discharge_date", length = 2147483647)
+    public String visitFinancialDischargeDate="";
+//    @Column(name = "employee_firstname", length = 255)
+    public String employeeFirstname="";
+//    @Column(name = "employee_lastname", length = 255)
+    public String employeeLastname="";
+//    @Column(name = "ncd_group_description", length = 255)
+    public String ncdGroupDescription="";
+//    @Column(name = "refer_cause_description", length = 255)
+    public String referCauseDescription="";
+//    @Column(name = "contract_plans_description", length = 255)
+    public String contractPlansDescription="";
+//    @Column(name = "visit_clinic_description", length = 255)
+    public String visitClinicDescription="";
+    public String visitAge="";
+    public String sex="";
+    public String visitWardName="";
+
+    public VVisit() {
+    }
+    public void initial(){
+        tVisitId="";
+        visitHn="";
+        visitVn="";
+        fVisitTypeId="";
+        visitBeginVisitTime="";
+        visitFinancialDischargeTime="";
+        visitNotice="";
+        bVisitOfficeIdReferIn="";
+        bVisitOfficeIdReferOut="";
+        visitDiagnosisNotice="";
+        fVisitOpdDischargeStatusId="";
+        fVisitIpdDischargeTypeId="";
+        fVisitIpdDischargeStatusId="";
+        visitLocking="";
+        visitStaffLock="";
+        visitLockDateTime="";
+        fVisitStatusId="";
+        visitPregnant="";
+        bVisitClinicId="";
+        bVisitWardId="";
+        visitBed="";
+        visitObserve="";
+        visitPatientType="";
+        visitQueue="";
+        bServicePointId="";
+        visitStaffObserve="";
+        visitDx="";
+        visitIpdDischargeStatus="";
+        visitMoneyDischargeStatus="";
+        visitDoctorDischargeStatus="";
+        tPatientId="";
+        visitStaffFinancialDischarge="";
+        visitStaffDoctorDischarge="";
+        visitStaffDoctorDischargeDateTime="";
+        visitAn="";
+        visitDxStat="";
+        visitBeginAdmitDateTime="";
+        visitDenyAllergy="";
+        visitFirstVisit="";
+        visitPatientSelfDoctor="";
+        visitPatientAge="";
+        visitPcuService="";
+        visitHospitalService="";
+        visitLabStatusId="";
+        visitNcd="";
+        bNcdGroupId="";
+        fReferCauseId="";
+        fEmergencyStatusId="";
+        visitEmergencyStaff="";
+        visitHaveAppointment="";
+        visitHaveAdmit="";
+        visitHaveRefer="";
+        tPatientAppointmentId="";
+        visitCalDateAppointment="";
+        visitCauseAppointment="";
+        bContractPlansId="";
+        contactId="";
+        contactNamet="";
+        contactJoinId="";
+        contactJoinNamet="";
+        surveillanceCaseId="";
+        patientPrefixDescription="";
+        patientFirstname="";
+        patientLastname="";
+        visitBeginVisitDate="";
+        visitFinancialDischargeDate="";
+        employeeFirstname="";
+        employeeLastname="";
+        ncdGroupDescription="";
+        referCauseDescription="";
+        contractPlansDescription="";
+        visitClinicDescription="";
+    }
+    public String getVVisit() {
+        return "v_visit";
+    }
+
+    public String getTVisitId() {
+        return tVisitId;
+    }
+
+    public void setTVisitId(String tVisitId) {
+        this.tVisitId = tVisitId;
+    }
+
+    public String getVisitHn() {
+        return visitHn;
+    }
+
+    public void setVisitHn(String visitHn) {
+        this.visitHn = visitHn;
+    }
+
+    public String getVisitVn() {
+        return visitVn;
+    }
+
+    public void setVisitVn(String visitVn) {
+        this.visitVn = visitVn;
+    }
+
+    public String getFVisitTypeId() {
+        return fVisitTypeId;
+    }
+
+    public void setFVisitTypeId(String fVisitTypeId) {
+        this.fVisitTypeId = fVisitTypeId;
+    }
+
+    public String getVisitBeginVisitTime() {
+        return visitBeginVisitTime;
+    }
+
+    public void setVisitBeginVisitTime(String visitBeginVisitTime) {
+        this.visitBeginVisitTime = visitBeginVisitTime;
+    }
+
+    public String getVisitFinancialDischargeTime() {
+        return visitFinancialDischargeTime;
+    }
+
+    public void setVisitFinancialDischargeTime(String visitFinancialDischargeTime) {
+        this.visitFinancialDischargeTime = visitFinancialDischargeTime;
+    }
+
+    public String getVisitNotice() {
+        return visitNotice;
+    }
+
+    public void setVisitNotice(String visitNotice) {
+        this.visitNotice = visitNotice;
+    }
+
+    public String getBVisitOfficeIdReferIn() {
+        return bVisitOfficeIdReferIn;
+    }
+
+    public void setBVisitOfficeIdReferIn(String bVisitOfficeIdReferIn) {
+        this.bVisitOfficeIdReferIn = bVisitOfficeIdReferIn;
+    }
+
+    public String getBVisitOfficeIdReferOut() {
+        return bVisitOfficeIdReferOut;
+    }
+
+    public void setBVisitOfficeIdReferOut(String bVisitOfficeIdReferOut) {
+        this.bVisitOfficeIdReferOut = bVisitOfficeIdReferOut;
+    }
+
+    public String getVisitDiagnosisNotice() {
+        return visitDiagnosisNotice;
+    }
+
+    public void setVisitDiagnosisNotice(String visitDiagnosisNotice) {
+        this.visitDiagnosisNotice = visitDiagnosisNotice;
+    }
+
+    public String getFVisitOpdDischargeStatusId() {
+        return fVisitOpdDischargeStatusId;
+    }
+
+    public void setFVisitOpdDischargeStatusId(String fVisitOpdDischargeStatusId) {
+        this.fVisitOpdDischargeStatusId = fVisitOpdDischargeStatusId;
+    }
+
+    public String getFVisitIpdDischargeTypeId() {
+        return fVisitIpdDischargeTypeId;
+    }
+
+    public void setFVisitIpdDischargeTypeId(String fVisitIpdDischargeTypeId) {
+        this.fVisitIpdDischargeTypeId = fVisitIpdDischargeTypeId;
+    }
+
+    public String getFVisitIpdDischargeStatusId() {
+        return fVisitIpdDischargeStatusId;
+    }
+
+    public void setFVisitIpdDischargeStatusId(String fVisitIpdDischargeStatusId) {
+        this.fVisitIpdDischargeStatusId = fVisitIpdDischargeStatusId;
+    }
+
+    public String getVisitLocking() {
+        return visitLocking;
+    }
+
+    public void setVisitLocking(String visitLocking) {
+        this.visitLocking = visitLocking;
+    }
+
+    public String getVisitStaffLock() {
+        return visitStaffLock;
+    }
+
+    public void setVisitStaffLock(String visitStaffLock) {
+        this.visitStaffLock = visitStaffLock;
+    }
+
+    public String getVisitLockDateTime() {
+        return visitLockDateTime;
+    }
+
+    public void setVisitLockDateTime(String visitLockDateTime) {
+        this.visitLockDateTime = visitLockDateTime;
+    }
+
+    public String getFVisitStatusId() {
+        return fVisitStatusId;
+    }
+
+    public void setFVisitStatusId(String fVisitStatusId) {
+        this.fVisitStatusId = fVisitStatusId;
+    }
+
+    public String getVisitPregnant() {
+        return visitPregnant;
+    }
+
+    public void setVisitPregnant(String visitPregnant) {
+        this.visitPregnant = visitPregnant;
+    }
+
+    public String getBVisitClinicId() {
+        return bVisitClinicId;
+    }
+
+    public void setBVisitClinicId(String bVisitClinicId) {
+        this.bVisitClinicId = bVisitClinicId;
+    }
+
+    public String getBVisitWardId() {
+        return bVisitWardId;
+    }
+
+    public void setBVisitWardId(String bVisitWardId) {
+        this.bVisitWardId = bVisitWardId;
+    }
+
+    public String getVisitBed() {
+        return visitBed;
+    }
+
+    public void setVisitBed(String visitBed) {
+        this.visitBed = visitBed;
+    }
+
+    public String getVisitObserve() {
+        return visitObserve;
+    }
+
+    public void setVisitObserve(String visitObserve) {
+        this.visitObserve = visitObserve;
+    }
+
+    public String getVisitPatientType() {
+        return visitPatientType;
+    }
+
+    public void setVisitPatientType(String visitPatientType) {
+        this.visitPatientType = visitPatientType;
+    }
+
+    public String getVisitQueue() {
+        return visitQueue;
+    }
+
+    public void setVisitQueue(String visitQueue) {
+        this.visitQueue = visitQueue;
+    }
+
+    public String getBServicePointId() {
+        return bServicePointId;
+    }
+
+    public void setBServicePointId(String bServicePointId) {
+        this.bServicePointId = bServicePointId;
+    }
+
+    public String getVisitStaffObserve() {
+        return visitStaffObserve;
+    }
+
+    public void setVisitStaffObserve(String visitStaffObserve) {
+        this.visitStaffObserve = visitStaffObserve;
+    }
+
+    public String getVisitDx() {
+        return visitDx;
+    }
+
+    public void setVisitDx(String visitDx) {
+        this.visitDx = visitDx;
+    }
+
+    public String getVisitIpdDischargeStatus() {
+        return visitIpdDischargeStatus;
+    }
+
+    public void setVisitIpdDischargeStatus(String visitIpdDischargeStatus) {
+        this.visitIpdDischargeStatus = visitIpdDischargeStatus;
+    }
+
+    public String getVisitMoneyDischargeStatus() {
+        return visitMoneyDischargeStatus;
+    }
+
+    public void setVisitMoneyDischargeStatus(String visitMoneyDischargeStatus) {
+        this.visitMoneyDischargeStatus = visitMoneyDischargeStatus;
+    }
+
+    public String getVisitDoctorDischargeStatus() {
+        return visitDoctorDischargeStatus;
+    }
+
+    public void setVisitDoctorDischargeStatus(String visitDoctorDischargeStatus) {
+        this.visitDoctorDischargeStatus = visitDoctorDischargeStatus;
+    }
+
+    public String getTPatientId() {
+        return tPatientId;
+    }
+
+    public void setTPatientId(String tPatientId) {
+        this.tPatientId = tPatientId;
+    }
+
+    public String getVisitStaffFinancialDischarge() {
+        return visitStaffFinancialDischarge;
+    }
+
+    public void setVisitStaffFinancialDischarge(String visitStaffFinancialDischarge) {
+        this.visitStaffFinancialDischarge = visitStaffFinancialDischarge;
+    }
+
+    public String getVisitStaffDoctorDischarge() {
+        return visitStaffDoctorDischarge;
+    }
+
+    public void setVisitStaffDoctorDischarge(String visitStaffDoctorDischarge) {
+        this.visitStaffDoctorDischarge = visitStaffDoctorDischarge;
+    }
+
+    public String getVisitStaffDoctorDischargeDateTime() {
+        return visitStaffDoctorDischargeDateTime;
+    }
+
+    public void setVisitStaffDoctorDischargeDateTime(String visitStaffDoctorDischargeDateTime) {
+        this.visitStaffDoctorDischargeDateTime = visitStaffDoctorDischargeDateTime;
+    }
+
+    public String getVisitAn() {
+        return visitAn;
+    }
+
+    public void setVisitAn(String visitAn) {
+        this.visitAn = visitAn;
+    }
+
+    public String getVisitDxStat() {
+        return visitDxStat;
+    }
+
+    public void setVisitDxStat(String visitDxStat) {
+        this.visitDxStat = visitDxStat;
+    }
+
+    public String getVisitBeginAdmitDateTime() {
+        return visitBeginAdmitDateTime;
+    }
+
+    public void setVisitBeginAdmitDateTime(String visitBeginAdmitDateTime) {
+        this.visitBeginAdmitDateTime = visitBeginAdmitDateTime;
+    }
+
+    public String getVisitDenyAllergy() {
+        return visitDenyAllergy;
+    }
+
+    public void setVisitDenyAllergy(String visitDenyAllergy) {
+        this.visitDenyAllergy = visitDenyAllergy;
+    }
+
+    public String getVisitFirstVisit() {
+        return visitFirstVisit;
+    }
+
+    public void setVisitFirstVisit(String visitFirstVisit) {
+        this.visitFirstVisit = visitFirstVisit;
+    }
+
+    public String getVisitPatientSelfDoctor() {
+        return visitPatientSelfDoctor;
+    }
+
+    public void setVisitPatientSelfDoctor(String visitPatientSelfDoctor) {
+        this.visitPatientSelfDoctor = visitPatientSelfDoctor;
+    }
+
+    public String getVisitPatientAge() {
+        return visitPatientAge;
+    }
+
+    public void setVisitPatientAge(String visitPatientAge) {
+        this.visitPatientAge = visitPatientAge;
+    }
+
+    public String getVisitPcuService() {
+        return visitPcuService;
+    }
+
+    public void setVisitPcuService(String visitPcuService) {
+        this.visitPcuService = visitPcuService;
+    }
+
+    public String getVisitHospitalService() {
+        return visitHospitalService;
+    }
+
+    public void setVisitHospitalService(String visitHospitalService) {
+        this.visitHospitalService = visitHospitalService;
+    }
+
+    public String getVisitLabStatusId() {
+        return visitLabStatusId;
+    }
+
+    public void setVisitLabStatusId(String visitLabStatusId) {
+        this.visitLabStatusId = visitLabStatusId;
+    }
+
+    public String getVisitNcd() {
+        return visitNcd;
+    }
+
+    public void setVisitNcd(String visitNcd) {
+        this.visitNcd = visitNcd;
+    }
+
+    public String getBNcdGroupId() {
+        return bNcdGroupId;
+    }
+
+    public void setBNcdGroupId(String bNcdGroupId) {
+        this.bNcdGroupId = bNcdGroupId;
+    }
+
+    public String getFReferCauseId() {
+        return fReferCauseId;
+    }
+
+    public void setFReferCauseId(String fReferCauseId) {
+        this.fReferCauseId = fReferCauseId;
+    }
+
+    public String getFEmergencyStatusId() {
+        return fEmergencyStatusId;
+    }
+
+    public void setFEmergencyStatusId(String fEmergencyStatusId) {
+        this.fEmergencyStatusId = fEmergencyStatusId;
+    }
+
+    public String getVisitEmergencyStaff() {
+        return visitEmergencyStaff;
+    }
+
+    public void setVisitEmergencyStaff(String visitEmergencyStaff) {
+        this.visitEmergencyStaff = visitEmergencyStaff;
+    }
+
+    public String getVisitHaveAppointment() {
+        return visitHaveAppointment;
+    }
+
+    public void setVisitHaveAppointment(String visitHaveAppointment) {
+        this.visitHaveAppointment = visitHaveAppointment;
+    }
+
+    public String getVisitHaveAdmit() {
+        return visitHaveAdmit;
+    }
+
+    public void setVisitHaveAdmit(String visitHaveAdmit) {
+        this.visitHaveAdmit = visitHaveAdmit;
+    }
+
+    public String getVisitHaveRefer() {
+        return visitHaveRefer;
+    }
+
+    public void setVisitHaveRefer(String visitHaveRefer) {
+        this.visitHaveRefer = visitHaveRefer;
+    }
+
+    public String getTPatientAppointmentId() {
+        return tPatientAppointmentId;
+    }
+
+    public void setTPatientAppointmentId(String tPatientAppointmentId) {
+        this.tPatientAppointmentId = tPatientAppointmentId;
+    }
+
+    public String getVisitCalDateAppointment() {
+        return visitCalDateAppointment;
+    }
+
+    public void setVisitCalDateAppointment(String visitCalDateAppointment) {
+        this.visitCalDateAppointment = visitCalDateAppointment;
+    }
+
+    public String getVisitCauseAppointment() {
+        return visitCauseAppointment;
+    }
+
+    public void setVisitCauseAppointment(String visitCauseAppointment) {
+        this.visitCauseAppointment = visitCauseAppointment;
+    }
+
+    public String getBContractPlansId() {
+        return bContractPlansId;
+    }
+
+    public void setBContractPlansId(String bContractPlansId) {
+        this.bContractPlansId = bContractPlansId;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
+    }
+
+    public String getContactNamet() {
+        return contactNamet;
+    }
+
+    public void setContactNamet(String contactNamet) {
+        this.contactNamet = contactNamet;
+    }
+
+    public String getContactJoinId() {
+        return contactJoinId;
+    }
+
+    public void setContactJoinId(String contactJoinId) {
+        this.contactJoinId = contactJoinId;
+    }
+
+    public String getContactJoinNamet() {
+        return contactJoinNamet;
+    }
+
+    public void setContactJoinNamet(String contactJoinNamet) {
+        this.contactJoinNamet = contactJoinNamet;
+    }
+
+    public String getSurveillanceCaseId() {
+        return surveillanceCaseId;
+    }
+
+    public void setSurveillanceCaseId(String surveillanceCaseId) {
+        this.surveillanceCaseId = surveillanceCaseId;
+    }
+
+    public String getPatientPrefixDescription() {
+        return patientPrefixDescription;
+    }
+
+    public void setPatientPrefixDescription(String patientPrefixDescription) {
+        this.patientPrefixDescription = patientPrefixDescription;
+    }
+
+    public String getPatientFirstname() {
+        return patientFirstname;
+    }
+
+    public void setPatientFirstname(String patientFirstname) {
+        this.patientFirstname = patientFirstname;
+    }
+
+    public String getPatientLastname() {
+        return patientLastname;
+    }
+
+    public void setPatientLastname(String patientLastname) {
+        this.patientLastname = patientLastname;
+    }
+
+    public String getVisitBeginVisitDate() {
+        return visitBeginVisitDate;
+    }
+
+    public void setVisitBeginVisitDate(String visitBeginVisitDate) {
+        this.visitBeginVisitDate = visitBeginVisitDate;
+    }
+
+    public String getVisitFinancialDischargeDate() {
+        return visitFinancialDischargeDate;
+    }
+
+    public void setVisitFinancialDischargeDate(String visitFinancialDischargeDate) {
+        this.visitFinancialDischargeDate = visitFinancialDischargeDate;
+    }
+
+    public String getEmployeeFirstname() {
+        return employeeFirstname;
+    }
+
+    public void setEmployeeFirstname(String employeeFirstname) {
+        this.employeeFirstname = employeeFirstname;
+    }
+
+    public String getEmployeeLastname() {
+        return employeeLastname;
+    }
+
+    public void setEmployeeLastname(String employeeLastname) {
+        this.employeeLastname = employeeLastname;
+    }
+
+    public String getNcdGroupDescription() {
+        return ncdGroupDescription;
+    }
+
+    public void setNcdGroupDescription(String ncdGroupDescription) {
+        this.ncdGroupDescription = ncdGroupDescription;
+    }
+
+    public String getReferCauseDescription() {
+        return referCauseDescription;
+    }
+
+    public void setReferCauseDescription(String referCauseDescription) {
+        this.referCauseDescription = referCauseDescription;
+    }
+
+    public String getContractPlansDescription() {
+        return contractPlansDescription;
+    }
+
+    public void setContractPlansDescription(String contractPlansDescription) {
+        this.contractPlansDescription = contractPlansDescription;
+    }
+
+    public String getVisitClinicDescription() {
+        return visitClinicDescription;
+    }
+
+    public void setVisitClinicDescription(String visitClinicDescription) {
+        this.visitClinicDescription = visitClinicDescription;
+    }
+
+}

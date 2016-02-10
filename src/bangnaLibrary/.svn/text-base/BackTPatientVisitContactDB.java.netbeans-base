@@ -1,0 +1,1479 @@
+package bangnaLibrary;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class BackTPatientVisitContactDB{
+    Config1 config1 = new Config1();
+//  public bpvdb.config1 bpvdb.config1 = new bpvdb.config1();
+//  private BBranch branch = new BBranch();
+    public BackTPatientVisitContact bpv_c;
+    public BackTPatientVisitContactItem bpv_ci;
+    private BackTPatientVisitContactBilling bpv_cb;
+    private BackTPatientVisitContactBillingItem bpv_cbi;
+    public BackTPatientVisitDB bpvdb = new BackTPatientVisitDB();
+//    private BackTPatientVisit bpv = new BackTPatientVisit();
+    //private BackTPatientVisitItem bpvi = new BackTPatientVisitItem();
+
+    public BackTPatientVisitContactDB(){
+        config1 = new Config1();
+        initConfig(config1);
+    }
+    public BackTPatientVisitContactDB(Config1 cf){
+        config1 = cf;
+        initConfig(config1);
+    }
+    public void initConfig(Config1 cf){
+        bpv_c = new BackTPatientVisitContact();
+        bpv_ci = new BackTPatientVisitContactItem();
+        bpv_cb = new BackTPatientVisitContactBilling();
+        bpv_cbi = new BackTPatientVisitContactBillingItem();
+        bpvdb = new BackTPatientVisitDB(cf);
+    }
+    public String getMaxRowBackTPatientVisitContact(Connection conn) {
+        String sql = ""; String max = "";
+        try {
+            Statement st = conn.createStatement();
+            sql = "Select max(" + bpv_c.getFPatientVisitContactId() + ") as cnt "
+                  + "From " + bpv_c.getBackTPatientVisitContact();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                max = rs.getString("cnt");
+            }
+            rs.close();
+            if ((max != null) && (!max.equals("")))
+                max = String.valueOf(Integer.parseInt(max) + 1);
+            else
+                max = "1470000001";
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return max;
+    }
+    public String getMaxRowBackTPatientVisitContactItem(Connection conn) {
+        String sql = ""; String max = "";
+        try {
+            Statement st = conn.createStatement();
+            sql = "Select max(" + bpv_ci.getFPatientVisitContactItemId() + ") as cnt "
+                  + "From " + bpv_ci.getBackTPatientVisitContactItem();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                max = rs.getString("cnt");
+            }
+            rs.close();
+            if ((max != null) && (!max.equals("")))
+                max = String.valueOf(Integer.parseInt(max) + 1);
+            else
+                max = "1500000001";
+        }
+        catch (Exception ex) {
+            Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return max;
+    }
+    public BackTPatientVisitContact getBackTPatientVisitContactByPK(String branch_id, String where, String bpv_c_id, String flag) {
+        Vector v_patient_visit_contact = new Vector();
+        try {
+            Connection conn = bpvdb.config1.getConnectionBangna();
+            Statement stbangna = conn.createStatement();
+            bpv_c = getBackTPatientVisitContactByPK(stbangna, branch_id, bpv_c_id, flag);
+            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bpv_c;
+    }
+    public BackTPatientVisitContact getBackTPatientVisitContactByPK(Statement stbangna,String branch_id, String bpv_c_id, String flag) {
+        String sql = "";
+        try {
+            bpv_c = new BackTPatientVisitContact();
+//            Connection conn = bpvdb.config1.getConnectionBangna();
+//            Statement stbangna = conn.createStatement();
+            if (flag.equals("patient_import_id")) {
+                sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFPatientImportId() + "='" + bpv_c_id + "' and "
+                    + bpv_c.getFBranchId() + "='" + branch_id + "' and " + bpv_c.getFPatientVisitContactActive() + "='1' ";
+            }else if(flag.equals("visit_vn")){
+                sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFVisitVn() + "='" + bpv_c_id + "' and "
+                    + bpv_c.getFBranchId() + "='" + branch_id + "' ";
+            }else{
+                sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFPatientVisitContactId() + "='" + bpv_c_id + "' and "
+                    + bpv_c.getFBranchId() + "='" + branch_id + "' ";
+            }
+            ResultSet rs = stbangna.executeQuery(sql);
+            while (rs.next()) {
+                bpv_c.setBServicePointId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBServicePointId())));
+                bpv_c.setBVisitClinicId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBVisitClinicId())));
+                bpv_c.setVisitClaimId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitClaimId())));
+                bpv_c.setVisitPaidId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPaidId())));
+                bpv_c.setPatientFullnamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientFullnamet())));
+
+                bpv_c.setPatientVisitId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitId())));
+                bpv_c.setTPatientId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFTPatientId())));
+                bpv_c.setVisitBeginVisitTime(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitBeginVisitTime())));
+                bpv_c.setVisitDate(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitDate())));
+                bpv_c.setVisitDiagnosisNotice(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitDiagnosisNotice())));
+
+                bpv_c.setVisitFinancialDischargeTime(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitFinancialDischargeTime())));
+                bpv_c.setVisitFirstVisit(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitFirstVisit())));
+                bpv_c.setVisitHn(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitHn())));
+                bpv_c.setVisitHospitalService(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitHospitalService())));
+                bpv_c.setVisitNotice(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitNotice())));
+
+                bpv_c.setVisitPatientAge(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPatientAge())));
+                bpv_c.setVisitPatientSelfDoctor(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPatientSelfDoctor())));
+                bpv_c.setVisitVn(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitVn())));
+                bpv_c.setVisitClaimNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitClaimNamet())));
+                bpv_c.setVisitPaidNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPaidNamet())));
+
+                bpv_c.setDepartmentNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFDepartmentNamet())));
+                bpv_c.setDoctorNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFDoctorNamet())));
+                bpv_c.setPatientImportId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientImportId())));
+                bpv_c.setBranchId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBranchId())));
+                bpv_c.setSysStatus(bpvdb.config1.StringNull(rs.getString(bpv_c.getFSysStatus())));
+
+                bpv_c.setVisitPaid(Double.parseDouble(rs.getString(bpv_c.getFVisitPaid())));
+                bpv_c.setVisitTotal(Double.parseDouble(rs.getString(bpv_c.getFVisitTotal())));
+                bpv_c.setVisitDiscount(Double.parseDouble(rs.getString(bpv_c.getFVisitDiscount())));
+                bpv_c.setVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactId())));
+                bpv_c.setVisitContactNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactNamet())));
+                
+                bpv_c.setPatientVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactId())));
+                bpv_c.setPatientVisitContactActive(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactActive())));
+                bpv_c.setStatusBilling(bpvdb.config1.StringNull(rs.getString(bpv_c.getFStatusBilling())));
+                bpv_c.setRecordStatus(bpvdb.config1.StringNull(rs.getString(bpv_c.getFRecordStatus())));
+                bpv_c.setVisitContactJoinId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactJoinId())));
+                
+                bpv_c.setVisitContactJoinNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactJoinNamet())));
+                bpv_c.setCloseDayDate(bpvdb.config1.StringNull(rs.getString(bpv_c.getFCloseDayDate())));
+                bpv_c.setBillingInvoiceNumber(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBillingInvoiceNumber())));
+                bpv_c.setReceiveAmount(Double.parseDouble(rs.getString(bpv_c.getFReceiveAmount())));
+                bpv_c.setBillingPaymentItemid(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBillingPaymentItemId())));
+                
+                bpv_c.setPatientVisitContactBillingId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactBillingId())));
+
+            }
+            rs.close();
+//            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bpv_c;
+    }
+    public Vector getBackTPatientVisitContact(String branch_id, String visit_hn, String date_end, String where, String bpv_c_id, String flag) {
+        Vector v_bpv_c = new Vector();
+        try {
+            Connection conn = bpvdb.config1.getConnectionBangna();
+            Statement stbangna = conn.createStatement();
+            v_bpv_c = getBackTPatientVisitContact(stbangna,branch_id, visit_hn, date_end, where, bpv_c_id, flag);
+            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v_bpv_c;
+    }
+    public Vector getBackTPatientVisitContact(Statement stbangna,String branch_id, String visit_hn, String date_end, String where,
+            String bpv_c_id, String flag) {
+        Vector v_patient_visit_contact = new Vector();
+        String sql = "", date_search="",hn_search="", paid_search="", contact_search="";
+        try {
+//            Connection conn = bpvdb.config1.getConnectionBangna();
+//            Statement stbangna = conn.createStatement();
+
+            if (flag.equals("patient_import_id")) {
+            sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFPatientImportId() + "='" + bpv_c_id + "' and "
+                    + bpv_c.getFBranchId() + "='" + branch_id + "' and " + bpv_c.getFPatientVisitContactActive() + "='1'";
+            }else if (flag.equals("prepare_debtor")) {
+                if (!visit_hn.equals("")) {
+                    hn_search = " and " + bpv_c.getFVisitHn() + " like '%" + visit_hn + "'";
+                }
+                if (!date_end.equals("")) {
+                    date_search = " and " + bpv_c.getFCloseDayDate() + " <= '" + bpvdb.config1.DateFormatShow2DB(date_end, "ddMMyyyy") + "' ";
+                }
+                if (!where.equals("")) {
+                    paid_search = " and " + bpv_c.getFVisitPaidId() + " like '" + where + "'%";
+                }
+                String bbb="";
+                String ccc="";
+                if (!bpv_c_id.equals("")) {
+                    String aaa[] = bpv_c_id.split("\\^");
+                    if(aaa.length>1){
+                        bbb = aaa[0];
+                        ccc = aaa[1];
+                    }
+                    if(bbb.equals("true")){//contact_join_id
+                        contact_search = " and " + bpv_c.getFVisitContactJoinId() + " like '" + ccc + "%'";
+                    }else{
+                        contact_search = " and " + bpv_c.getFVisitContactJoinNamet() + " like '" + ccc + "%'";
+                    }
+                }
+                sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFBranchId()+"='" + branch_id + "' and "
+                    + bpv_c.getFStatusBilling()+" in ('0','1') and "
+                    + bpv_c.getFPatientVisitContactActive() + "='1' " + date_search + paid_search + contact_search+hn_search;
+            }else{
+            sql = "Select * From " + bpv_c.getBackTPatientVisitContact() + " "
+                    + "Where " + bpv_c.getFPatientVisitContactId() + "='" + bpv_c_id + "' and "
+                    + bpv_c.getFBranchId() + branch_id + " and " + bpv_c.getFPatientVisitContactActive() + "='1' ";
+            }
+            ResultSet rs = stbangna.executeQuery(sql);
+            while (rs.next()) {
+                bpv_c = new BackTPatientVisitContact();
+                bpv_c.setBServicePointId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBServicePointId())));
+                bpv_c.setBVisitClinicId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBVisitClinicId())));
+                bpv_c.setVisitClaimId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitClaimId())));
+                bpv_c.setVisitPaidId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPaidId())));
+                bpv_c.setPatientFullnamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientFullnamet())));
+
+                bpv_c.setPatientVisitId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitId())));
+                bpv_c.setTPatientId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFTPatientId())));
+                bpv_c.setVisitBeginVisitTime(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitBeginVisitTime())));
+                bpv_c.setVisitDate(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitDate())));
+                bpv_c.setVisitDiagnosisNotice(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitDiagnosisNotice())));
+
+                bpv_c.setVisitFinancialDischargeTime(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitFinancialDischargeTime())));
+                bpv_c.setVisitFirstVisit(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitFirstVisit())));
+                bpv_c.setVisitHn(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitHn())));
+                bpv_c.setVisitHospitalService(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitHospitalService())));
+                bpv_c.setVisitNotice(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitNotice())));
+
+                bpv_c.setVisitPatientAge(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPatientAge())));
+                bpv_c.setVisitPatientSelfDoctor(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPatientSelfDoctor())));
+                bpv_c.setVisitVn(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitVn())));
+                bpv_c.setVisitClaimNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitClaimNamet())));
+                bpv_c.setVisitPaidNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitPaidNamet())));
+
+                bpv_c.setDepartmentNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFDepartmentNamet())));
+                bpv_c.setDoctorNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFDoctorNamet())));
+                bpv_c.setPatientImportId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientImportId())));
+                bpv_c.setBranchId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBranchId())));
+                bpv_c.setSysStatus(bpvdb.config1.StringNull(rs.getString(bpv_c.getFSysStatus())));
+
+                bpv_c.setVisitPaid(Double.parseDouble(rs.getString(bpv_c.getFVisitPaid())));
+                bpv_c.setVisitTotal(Double.parseDouble(rs.getString(bpv_c.getFVisitTotal())));
+                bpv_c.setVisitDiscount(Double.parseDouble(rs.getString(bpv_c.getFVisitDiscount())));
+                bpv_c.setVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactId())));
+                bpv_c.setVisitContactNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactNamet())));
+
+                bpv_c.setPatientVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactId())));
+                bpv_c.setPatientVisitContactActive(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactActive())));
+                bpv_c.setStatusBilling(bpvdb.config1.StringNull(rs.getString(bpv_c.getFStatusBilling())));
+                bpv_c.setRecordStatus(bpvdb.config1.StringNull(rs.getString(bpv_c.getFRecordStatus())));
+                bpv_c.setVisitContactJoinId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactJoinId())));
+
+                bpv_c.setVisitContactJoinNamet(bpvdb.config1.StringNull(rs.getString(bpv_c.getFVisitContactJoinNamet())));
+                bpv_c.setCloseDayDate(bpvdb.config1.StringNull(rs.getString(bpv_c.getFCloseDayDate())));
+                bpv_c.setBillingInvoiceNumber(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBillingInvoiceNumber())));
+                bpv_c.setReceiveAmount(Double.parseDouble(rs.getString(bpv_c.getFReceiveAmount())));
+                bpv_c.setBillingPaymentItemid(bpvdb.config1.StringNull(rs.getString(bpv_c.getFBillingPaymentItemId())));
+
+                bpv_c.setPatientVisitContactBillingId(bpvdb.config1.StringNull(rs.getString(bpv_c.getFPatientVisitContactBillingId())));
+
+                v_patient_visit_contact.add(bpv_c);
+            }
+            rs.close();
+//            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v_patient_visit_contact;
+    }
+    public BackTPatientVisitContactItem getBackTPatientVisitContactItemByPK(String patient_visit_contact_billing_invoice_itemid) {
+        String sql = "";
+        try {
+            bpv_ci = new BackTPatientVisitContactItem();
+            Connection conn = bpvdb.config1.getConnectionBangna();
+            Statement stbangna = conn.createStatement();
+            sql = "Select * From " + bpv_ci.getBackTPatientVisitContactItem() + " "
+              + "Where " + bpv_ci.getFPatientVisitContactItemId() + "='" + patient_visit_contact_billing_invoice_itemid + "'";
+            ResultSet rs = stbangna.executeQuery(sql);
+            while (rs.next()) {
+                bpv_ci.setBItemBillingSubgroupId(rs.getString(bpv_ci.getFBItemBillingSubgroupId()));
+                bpv_ci.setBItemId(rs.getString(bpv_ci.getFBItemId()));
+                bpv_ci.setBillingInvoiceItemActive(rs.getString(bpv_ci.getFBillingInvoiceItemActive()));
+                bpv_ci.setBillingInvoiceItemTotal(Double.parseDouble(rs.getString(bpv_ci.getFBillingInvoiceItemTotal())));
+                bpv_ci.setBillingInvoiceNumber(rs.getString(bpv_ci.getFBillingInvoiceNumber()));
+
+                bpv_ci.setClaimId(rs.getString(bpv_ci.getFClaimId()));
+                bpv_ci.setClaimNamet(rs.getString(bpv_ci.getFClaimNamet()));
+                bpv_ci.setDepartmentNamet(rs.getString(bpv_ci.getFDepartmentNamet()));
+                bpv_ci.setPatientVisitContactItemId(rs.getString(bpv_ci.getFPatientVisitContactItemId()));
+                bpv_ci.setPatientVisitId(rs.getString(bpv_ci.getFPatientVisitId()));
+
+                bpv_ci.setTBillingId(rs.getString(bpv_ci.getFTBillingId()));
+                bpv_ci.setTBillingInvoiceDateTime(rs.getString(bpv_ci.getFTBillingInvoiceDateTime()));
+                bpv_ci.setTBillingInvoiceItemId(rs.getString(bpv_ci.getFTBillingInvoiceItemId()));
+                bpv_ci.setTBillingInvoiceItemNamet(rs.getString(bpv_ci.getFTBillingInvoiceItemNamet()));
+                bpv_ci.setTBillingInvoiceTime(rs.getString(bpv_ci.getFTBillingInvoiceTime()));
+
+                bpv_ci.setTOrderItemId(rs.getString(bpv_ci.getFTOrderItemId()));
+                bpv_ci.setTPatientId(rs.getString(bpv_ci.getFTPatientId()));
+                bpv_ci.setTPaymentId(rs.getString(bpv_ci.getFTPaymentId()));
+                bpv_ci.setVisitId(rs.getString(bpv_ci.getFVisitId()));
+                bpv_ci.setVisitPatientSelfDoctor(rs.getString(bpv_ci.getFVisitPatientSeftDoctor()));
+
+                bpv_ci.setVisitVn(rs.getString(bpv_ci.getFVisitVn()));
+                bpv_ci.setDepartmentId(rs.getString(bpv_ci.getFDepartmentId()));
+                bpv_ci.setVisitHn(rs.getString(bpv_ci.getFVisitHn()));
+                bpv_ci.setBranchId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBranchId())));
+                bpv_ci.setSysStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFSysStatus())));
+
+                bpv_ci.setItemDiscount(Double.parseDouble(rs.getString(bpv_ci.getFItemDiscount())));
+                bpv_ci.setItemPaid(Double.parseDouble(rs.getString(bpv_ci.getFItemPaid())));
+                bpv_ci.setItemTotal(Double.parseDouble(rs.getString(bpv_ci.getFItemTotal())));
+                bpv_ci.setItemNametEditStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemNametEditStatus())));
+                bpv_ci.setRecordStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFRecordStatus())));
+
+                bpv_ci.setPatientVisitItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitItemId())));
+                bpv_ci.setPatientVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitContactId())));
+                bpv_ci.setItemTotalOrginal(Double.parseDouble(rs.getString(bpv_ci.getFItemTotalOrginal())));
+                bpv_ci.setFItemGroupId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFFItemGroupId())));
+                bpv_ci.setItemNametEdit(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemNametEdit())));
+
+                bpv_ci.setItemTotalEditStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemTotalEditStatus())));
+                bpv_ci.setItemTotalEdit(Double.parseDouble(rs.getString(bpv_ci.getFItemTotalEdit())));
+            }
+            rs.close();
+            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bpv_ci;
+    }
+    public Vector getBackTPatientVisitContactItem(String branch_id, String bpv_ci_id, String flag) {
+        Vector v_bpv_c = new Vector();
+        try {
+            Connection conn = bpvdb.config1.getConnectionBangna();
+            Statement stbangna = conn.createStatement();
+            v_bpv_c = getBackTPatientVisitContactItem(stbangna,branch_id, bpv_ci_id, flag);
+            conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v_bpv_c;
+    }
+    public Vector getBackTPatientVisitContactItem(Statement stbangna,String branch_id, String bpv_ci_id, String flag) {
+        String sql = "";
+        Vector v_back_patient_visit_contact_item = new Vector();
+        try {
+//          Connection conn = bpvdb.config1.getConnectionBangna();
+//          Statement stbangna = conn.createStatement();
+          if (flag.equals("billing")) {
+            sql = "Select * From " + bpv_ci.getBackTPatientVisitContactItem() + " "
+                    + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + bpv_ci_id + "' and "
+                    + bpv_ci.getFBillingInvoiceItemActive() + "='1' " + "Order By " + bpv_ci.getFPatientVisitContactItemId() + " asc";
+          }else if (flag.equals("billing_item") || flag.equals("prepare_billing")) {
+            sql = "Select " + bpv_ci.getFBItemBillingSubgroupId() + ", "
+                    + "min(" + bpv_ci.getFBItemId() + ") as " + bpv_ci.getFBItemId() + ", "
+                    + "min(" + bpv_ci.getFBillingInvoiceItemActive() + ") as " + bpv_ci.getFBillingInvoiceItemActive() + ", "
+                    + "min(" + bpv_ci.getFBillingInvoiceItemTotal() + ") as " + bpv_ci.getFBillingInvoiceItemTotal() + ", "
+                    + "min(" + bpv_ci.getFBillingInvoiceNumber() + ") as " + bpv_ci.getFBillingInvoiceNumber() + ", "
+                    + "min(" + bpv_ci.getFBranchId() + ") as " + bpv_ci.getFBranchId() + ", "
+                    + "min(" + bpv_ci.getFClaimId() + ") as " + bpv_ci.getFClaimId() + ", "
+                    + "min(" + bpv_ci.getFClaimNamet() + ") as " + bpv_ci.getFClaimNamet() + ", "
+                    + "min(" + bpv_ci.getFDepartmentId() + ") as " + bpv_ci.getFDepartmentId() + ", "
+                    + "min(" + bpv_ci.getFDepartmentNamet() + ") as " + bpv_ci.getFDepartmentNamet() + ", "
+                    + "min(" + bpv_ci.getFItemNametEditStatus() + ") as " + bpv_ci.getFItemNametEditStatus() + ", "
+                    + "sum(" + bpv_ci.getFItemDiscount() + ") as " + bpv_ci.getFItemDiscount() + ", "
+                    + "sum(" + bpv_ci.getFItemPaid() + ") as " + bpv_ci.getFItemPaid() + ", "
+                    + "sum(" + bpv_ci.getFItemTotal() + ") as " + bpv_ci.getFItemTotal() + ", "
+                    + "sum(" + bpv_ci.getFItemTotalOrginal() + ") as " + bpv_ci.getFItemTotalOrginal() + ", "
+                    + "min(" + bpv_ci.getFPatientVisitContactId() + ") as " + bpv_ci.getFPatientVisitContactId() + ", "
+                    + "min(" + bpv_ci.getFPatientVisitContactItemId() + ") as " + bpv_ci.getFPatientVisitContactItemId() + ", "
+                    + "min(" + bpv_ci.getFPatientVisitId() + ") as " + bpv_ci.getFPatientVisitId() + ", "
+                    + "min(" + bpv_ci.getFPatientVisitItemId() + ") as " + bpv_ci.getFPatientVisitItemId() + ", "
+                    + "min(" + bpv_ci.getFRecordStatus() + ") as " + bpv_ci.getFRecordStatus() + ", "
+                    + "min(" + bpv_ci.getFSysStatus() + ") as " + bpv_ci.getFSysStatus() + ", "
+                    + "min(" + bpv_ci.getFTBillingId() + ") as " + bpv_ci.getFTBillingId() + ", "
+                    + "min(" + bpv_ci.getFTBillingInvoiceDateTime() + ") as " + bpv_ci.getFTBillingInvoiceDateTime() + ", "
+                    + "min(" + bpv_ci.getFTBillingInvoiceItemId() + ") as " + bpv_ci.getFTBillingInvoiceItemId() + ", "
+                    + "min(" + bpv_ci.getFTBillingInvoiceItemNamet() + ") as " + bpv_ci.getFTBillingInvoiceItemNamet() + ", "
+                    + "min(" + bpv_ci.getFTBillingInvoiceTime() + ") as " + bpv_ci.getFTBillingInvoiceTime() + ", "
+                    + "min(" + bpv_ci.getFTOrderItemId() + ") as " + bpv_ci.getFTOrderItemId() + ", "
+                    + "min(" + bpv_ci.getFTPatientId() + ") as " + bpv_ci.getFTPatientId() + ", "
+                    + "min(" + bpv_ci.getFTPaymentId() + ") as " + bpv_ci.getFTPaymentId() + ", "
+                    + "min(" + bpv_ci.getFVisitHn() + ") as " + bpv_ci.getFVisitHn() + ", "
+                    + "min(" + bpv_ci.getFVisitId() + ") as " + bpv_ci.getFVisitId() + ", "
+                    + "min(" + bpv_ci.getFVisitPatientSeftDoctor() + ") as " + bpv_ci.getFVisitPatientSeftDoctor() + ", "
+                    + "min(" + bpv_ci.getFVisitVn() + ") as " + bpv_ci.getFVisitVn() + ", "
+                    + "min(" + bpv_ci.getFFItemGroupId() + ") as " + bpv_ci.getFFItemGroupId() + " "
+                    + "From " + bpv_ci.getBackTPatientVisitContactItem() + " "
+                    + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + bpv_ci_id + "' and "
+                    + bpv_ci.getFBillingInvoiceItemActive() + "='1' " + "Group By " + bpv_ci.getFBItemBillingSubgroupId() + " "
+                    + "Order By " + bpv_ci.getFPatientVisitContactItemId() + " asc";
+          }else{
+            sql = "Select * From " + bpv_ci.getBackTPatientVisitContactItem() + " "
+                    + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + bpv_ci_id + "' and "
+                    + bpv_ci.getFBillingInvoiceItemActive() + "='1' " + "Order By " + bpv_ci.getFPatientVisitContactItemId() + " asc";
+          }
+          ResultSet rs = stbangna.executeQuery(sql);
+          while (rs.next()) {
+            bpv_ci = new BackTPatientVisitContactItem();
+            bpv_ci.setBItemBillingSubgroupId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBItemBillingSubgroupId())));
+            bpv_ci.setBItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBItemId())));
+            bpv_ci.setBillingInvoiceItemActive(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBillingInvoiceItemActive())));
+            bpv_ci.setBillingInvoiceItemTotal(Double.parseDouble(rs.getString(bpv_ci.getFBillingInvoiceItemTotal())));
+            bpv_ci.setBillingInvoiceNumber(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBillingInvoiceNumber())));
+
+            bpv_ci.setClaimId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFClaimId())));
+            bpv_ci.setClaimNamet(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFClaimNamet())));
+            bpv_ci.setDepartmentNamet(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFDepartmentNamet())));
+            bpv_ci.setPatientVisitContactItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitContactItemId())));
+            bpv_ci.setPatientVisitId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitId())));
+
+            bpv_ci.setTBillingId(rs.getString(bpvdb.config1.StringNull(bpv_ci.getFTBillingId())));
+            bpv_ci.setTBillingInvoiceDateTime(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTBillingInvoiceDateTime())));
+            bpv_ci.setTBillingInvoiceItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTBillingInvoiceItemId())));
+            bpv_ci.setTBillingInvoiceItemNamet(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTBillingInvoiceItemNamet())));
+            bpv_ci.setTBillingInvoiceTime(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTBillingInvoiceTime())));
+
+            bpv_ci.setTOrderItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTOrderItemId())));
+            bpv_ci.setTPatientId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTPatientId())));
+            bpv_ci.setTPaymentId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFTPaymentId())));
+            bpv_ci.setVisitId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFVisitId())));
+            bpv_ci.setVisitPatientSelfDoctor(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFVisitPatientSeftDoctor())));
+
+            bpv_ci.setVisitVn(rs.getString(bpv_ci.getFVisitVn()));
+            bpv_ci.setDepartmentId(rs.getString(bpv_ci.getFDepartmentId()));
+            bpv_ci.setVisitHn(rs.getString(bpv_ci.getFVisitHn()));
+            bpv_ci.setBranchId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFBranchId())));
+            bpv_ci.setSysStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFSysStatus())));
+
+            bpv_ci.setItemDiscount(Double.parseDouble(rs.getString(bpv_ci.getFItemDiscount())));
+            bpv_ci.setItemPaid(Double.parseDouble(rs.getString(bpv_ci.getFItemPaid())));
+            bpv_ci.setItemTotal(Double.parseDouble(rs.getString(bpv_ci.getFItemTotal())));
+            bpv_ci.setItemNametEditStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemNametEditStatus())));
+            bpv_ci.setRecordStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFRecordStatus())));
+
+            bpv_ci.setPatientVisitItemId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitItemId())));
+            bpv_ci.setPatientVisitContactId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFPatientVisitContactId())));
+            bpv_ci.setItemTotalOrginal(Double.parseDouble(rs.getString(bpv_ci.getFItemTotalOrginal())));
+            bpv_ci.setFItemGroupId(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFFItemGroupId())));
+            if (!flag.equals("billing_item") && !flag.equals("prepare_billing")) {
+              bpv_ci.setItemNametEdit(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemNametEdit())));
+
+              bpv_ci.setItemTotalEditStatus(bpvdb.config1.StringNull(rs.getString(bpv_ci.getFItemTotalEditStatus())));
+              bpv_ci.setItemTotalEdit(Double.parseDouble(rs.getString(bpv_ci.getFItemTotalEdit())));
+            }
+            v_back_patient_visit_contact_item.add(bpv_ci);
+          }
+          rs.close();
+//          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v_back_patient_visit_contact_item;
+    }
+    public String setSaveBackTPatientVisitContact(BackTPatientVisitContact item) throws Exception {
+        int chk = 0;
+        String sql = ""; String max = "";
+        try{
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          bpv_c = getBackTPatientVisitContactByPK(st,item.getBranchId(), item.getPatientVisitContactId(), "");
+          item.setPatientFullnamet(bpvdb.config1.StringNull(item.getPatientFullnamet()).replace("'", "''"));
+          item.setVisitNotice(bpvdb.config1.StringNull(item.getVisitNotice()).replace("'", "''"));
+          item.setVisitDiagnosisNotice(bpvdb.config1.StringNull(item.getVisitDiagnosisNotice()).replace("'", "''"));
+          item.setVisitContactNamet(bpvdb.config1.StringNull(item.getVisitContactNamet()).replace("'", "''"));
+          item.setVisitContactJoinNamet(bpvdb.config1.StringNull(item.getVisitContactJoinNamet()).replace("'", "''"));
+          if (bpv_c.getPatientVisitContactId().equals("")) {
+            max = getMaxRowBackTPatientVisitContact(conn);
+            sql = "Insert Into " + bpv_c.getBackTPatientVisitContact()
+                    + "(" + bpv_c.getFPatientVisitContactId() + ", " + bpv_c.getFBServicePointId() + ", "
+                    + bpv_c.getFBVisitClinicId() + "," + bpv_c.getFVisitClaimId() + ","
+                    + bpv_c.getFVisitPaidId() + "," + bpv_c.getFPatientFullnamet() + ","
+                    + bpv_c.getFPatientImportId() + "," + bpv_c.getFTPatientId() + ","
+                    + bpv_c.getFVisitBeginVisitTime() + "," + bpv_c.getFVisitDate() + ","
+                    + bpv_c.getFVisitDiagnosisNotice() + "," + bpv_c.getFVisitFinancialDischargeTime() + ","
+                    + bpv_c.getFVisitFirstVisit() + "," + bpv_c.getFVisitHn() + ","
+                    + bpv_c.getFVisitHospitalService() + "," + bpv_c.getFVisitNotice() + ", "
+                    + bpv_c.getFVisitPatientAge() + "," + bpv_c.getFVisitPatientSelfDoctor() + ", "
+                    + bpv_c.getFVisitVn() + "," + bpv_c.getFVisitClaimNamet() + ","
+                    + bpv_c.getFVisitPaidNamet() + "," + bpv_c.getFDepartmentNamet() + ","
+                    + bpv_c.getFDoctorNamet() + "," + bpv_c.getFBranchId() + ","
+                    + bpv_c.getFSysStatus() + "," + bpv_c.getFPatientVisitId() + ","
+                    + bpv_c.getFVisitContactId() + "," + bpv_c.getFVisitContactNamet() + ","
+                    + bpv_c.getFPatientVisitContactActive() + "," + bpv_c.getFStatusBilling() + ","
+                    + bpv_c.getFVisitTotal() + "," + bpv_c.getFVisitDiscount() + ","
+                    + bpv_c.getFVisitPaid() + "," + bpv_c.getFRecordStatus() + ","
+                    + bpv_c.getFContractPayerNumber() + "," + bpv_c.getFCloseDayDate() + ","
+                    + bpv_c.getFVisitContactJoinId()+","+bpv_c.getFVisitContactJoinNamet()+") "
+                    + "Values('" + max + "','" + item.getBServicePointId() + "','"
+                    + item.getBVisitClinicId() + "','" + item.getVisitClaimId() + "','"
+                    + item.getVisitPaidId() + "','" + item.getPatientFullnamet() + "','"
+                    + item.getPatientImportId() + "','" + item.getTPatientId() + "','"
+                    + item.getVisitBeginVisitTime() + "','" + item.getVisitDate() + "','"
+                    + item.getVisitDiagnosisNotice() + "','" + item.getVisitFinancialDischargeTime() + "','"
+                    + item.getVisitFirstVisit() + "','" + item.getVisitHn() + "','"
+                    + item.getVisitHospitalService() + "','" + item.getVisitNotice() + "','"
+                    + item.getVisitPatientAge() + "','" + item.getVisitPatientSelfDoctor() + "','"
+                    + item.getVisitVn() + "','" + item.getVisitClaimNamet() + "','"
+                    + item.getVisitPaidNamet() + "','" + item.getDepartmentNamet() + "','"
+                    + item.getDoctorNamet() + "','" + item.getBranchId() + "','"
+                    + item.getSysStatus() + "','" + item.getPatientVisitId() + "','"
+                    + item.getVisitContactId() + "','" + item.getVisitContactNamet() + "','"
+                    + item.getPatientVisitContactActive() + "','" + item.getStatusBilling() + "',"
+                    + item.getVisitTotal() + "," + item.getVisitDiscount() + ","
+                    + item.getVisitPaid() + ",'" + item.getRecordStatus() + "','"
+                    + item.getContractPayerNumber() + "','" + item.getCloseDayDate() + "','"
+                    + item.getVisitContactJoinId()+"','"+item.getVisitContactJoinNamet()+"')";
+          }else{
+            sql = "Update " + bpv_c.getBackTPatientVisitContact()
+                    + " set " + bpv_c.getFBServicePointId() + " = '" + item.getBServicePointId() + "', "
+                    + bpv_c.getFBVisitClinicId() + " = '" + item.getBVisitClinicId() + "', "
+                    + bpv_c.getFVisitClaimId() + " = '" + item.getVisitClaimId() + "', "
+                    + bpv_c.getFVisitPaidId() + " = '" + item.getVisitPaidId() + "', "
+                    + bpv_c.getFPatientFullnamet() + " = '" + item.getPatientFullnamet() + "', "
+                    + bpv_c.getFPatientImportId() + " = '" + item.getPatientImportId() + "', "
+                    + bpv_c.getFTPatientId() + " = '" + item.getTPatientId() + "', "
+                    + bpv_c.getFVisitBeginVisitTime() + " = '" + item.getVisitBeginVisitTime() + "', "
+                    + bpv_c.getFVisitDate() + " = '" + item.getVisitDate() + "', "
+                    + bpv_c.getFVisitDiagnosisNotice() + " = '" + item.getVisitDiagnosisNotice() + "',"
+                    + bpv_c.getFVisitFinancialDischargeTime() + " = '" + item.getVisitFinancialDischargeTime() + "',"
+                    + bpv_c.getFVisitFirstVisit() + " = '" + item.getVisitFirstVisit() + "', "
+                    + bpv_c.getFVisitHn() + " = '" + item.getVisitHn() + "', "
+                    + bpv_c.getFVisitHospitalService() + " = '" + item.getVisitHospitalService() + "', "
+                    + bpv_c.getFVisitNotice() + " = '" + item.getVisitNotice() + "', "
+                    + bpv_c.getFVisitPatientAge() + " = " + item.getVisitPatientAge() + ", "
+                    + bpv_c.getFVisitPatientSelfDoctor() + " = '" + item.getVisitPatientSelfDoctor() + "', "
+                    + bpv_c.getFVisitVn() + " = '" + item.getVisitVn() + "', "
+                    + bpv_c.getFVisitClaimNamet() + " = '" + item.getVisitClaimNamet() + "', "
+                    + bpv_c.getFVisitPaidNamet() + " = '" + item.getVisitPaidNamet() + "', "
+                    + bpv_c.getFDepartmentNamet() + " = '" + item.getDepartmentNamet() + "', "
+                    + bpv_c.getFDoctorNamet() + " = '" + item.getDoctorNamet() + "', "
+                    + bpv_c.getFBranchId() + " = '" + item.getBranchId() + "', "
+                    + bpv_c.getFSysStatus() + " = '" + item.getSysStatus() + "', "
+                    + bpv_c.getFPatientVisitId() + " = '" + item.getPatientVisitId() + "', "
+                    + bpv_c.getFVisitContactId() + " = '" + item.getVisitContactId() + "', "
+                    + bpv_c.getFVisitContactNamet() + " = '" + item.getVisitContactNamet() + "', "
+                    + bpv_c.getFPatientVisitContactActive() + " = '" + item.getPatientVisitContactActive() + "', "
+                    + bpv_c.getFStatusBilling() + " = '" + item.getStatusBilling() + "', "
+                    + bpv_c.getFVisitPaid() + " = " + item.getVisitPaid() + ", "
+                    + bpv_c.getFVisitDiscount() + " = " + item.getVisitDiscount() + ", "
+                    + bpv_c.getFVisitTotal() + " = " + item.getVisitTotal() + ", "
+                    + bpv_c.getFRecordStatus() + " = '" + item.getRecordStatus() + "', "
+                    + bpv_c.getFContractPayerNumber() + " = '" + item.getContractPayerNumber() + "', "
+                    + bpv_c.getFCloseDayDate() + " = '" + item.getCloseDayDate() + "' "
+                    + "Where " + bpv_c.getFPatientVisitContactId() + " = '" + item.getPatientVisitContactId() + "'";
+            max = item.getPatientVisitId();
+          }
+          chk = st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+          max = ex.getMessage();
+        }
+        return max;
+    }
+  public String setSaveBackTPatientVisitContactItem(BackTPatientVisitContactItem item) throws Exception {
+    int chk = 0;
+    String sql = ""; String max = "";
+    try {
+      Connection conn = bpvdb.config1.getConnectionBangna();
+      Statement st = conn.createStatement();
+      bpv_ci = getBackTPatientVisitContactItemByPK(item.getPatientVisitContactItemId());
+      item.setClaimNamet(item.getClaimNamet().replace("'", "''"));
+      item.setDepartmentNamet(item.getDepartmentNamet().replace("'", "''"));
+      item.setTBillingInvoiceItemNamet(item.getTBillingInvoiceItemNamet().replace("'", "''"));
+      if (bpv_ci.getPatientVisitContactItemId().equals("")) {
+        max = getMaxRowBackTPatientVisitContactItem(conn);
+        sql = "Insert Into " + bpv_ci.getBackTPatientVisitContactItem() 
+                + "(" + bpv_ci.getFPatientVisitContactItemId() + ", " + bpv_ci.getFBItemBillingSubgroupId() + ", "
+                + bpv_ci.getFBItemId() + "," + bpv_ci.getFBillingInvoiceItemActive() + ","
+                + bpv_ci.getFBillingInvoiceItemTotal() + "," + bpv_ci.getFBillingInvoiceNumber() + ","
+                + bpv_ci.getFClaimId() + "," + bpv_ci.getFClaimNamet() + ","
+                + bpv_ci.getFDepartmentId() + "," + bpv_ci.getFDepartmentNamet() + ","
+                + bpv_ci.getFPatientVisitId() + "," + bpv_ci.getFTBillingId() + ","
+                + bpv_ci.getFPatientVisitItemId() + "," + bpv_ci.getFTBillingInvoiceDateTime() + ","
+                + bpv_ci.getFTBillingInvoiceItemId() + "," + bpv_ci.getFTBillingInvoiceItemNamet() + ", "
+                + bpv_ci.getFTBillingInvoiceTime() + "," + bpv_ci.getFTOrderItemId() + ", "
+                + bpv_ci.getFTPatientId() + "," + bpv_ci.getFTPaymentId() + ","
+                + bpv_ci.getFVisitHn() + "," + bpv_ci.getFVisitId() + ","
+                + bpv_ci.getFVisitPatientSeftDoctor() + "," + bpv_ci.getFVisitVn() + ","
+                + bpv_ci.getFBranchId() + "," + bpv_ci.getFSysStatus() + ","
+                + bpv_ci.getFItemDiscount() + "," + bpv_ci.getFItemPaid() + ","
+                + bpv_ci.getFItemTotal() + "," + bpv_ci.getFItemNametEditStatus() + ","
+                + bpv_ci.getFPatientVisitContactId() + "," + bpv_ci.getFItemTotalOrginal() + ","
+                + bpv_ci.getFFItemGroupId() + ") "
+                + "Values('" + max + "','" + item.getBItemBillingSubgroupId() + "','"
+                + item.getBItemId() + "','" + item.getBillingInvoiceItemActive() + "','"
+                + item.getBillingInvoiceItemTotal() + "','" + item.getBillingInvoiceNumber() + "','"
+                + item.getClaimId() + "','" + item.getClaimNamet() + "','"
+                + item.getDepartmentId() + "','" + item.getDepartmentNamet() + "','"
+                + item.getPatientVisitId() + "','" + item.getTBillingId() + "','"
+                + item.getTBillingInvoiceItemId() + "','" + item.getTBillingInvoiceDateTime() + "','"
+                + item.getTBillingInvoiceItemId() + "','" + item.getTBillingInvoiceItemNamet() + "','"
+                + item.getTBillingInvoiceTime() + "','" + item.getTOrderItemId() + "','"
+                + item.getTPatientId() + "','" + item.getVisitId() + "','"
+                + item.getVisitHn() + "','" + item.getDepartmentNamet() + "','"
+                + item.getVisitPatientSelfDoctor() + "','" + item.getVisitVn() + "','"
+                + item.getBranchId() + "','" + item.getSysStatus() + "',"
+                + item.getItemDiscount() + "," + item.getItemPaid() + ","
+                + item.getItemTotal() + ",'" + item.getItemNametEditStatus() + "','"
+                + item.getPatientVisitContactId() + "'," + item.getItemTotalOrginal() + ",'"
+                + item.getFItemGroupId() + "')";
+      }else{
+        sql = "Update " + bpv_ci.getBackTPatientVisitContactItem()
+                + " set " + bpv_ci.getFBItemBillingSubgroupId() + " = '" + item.getBItemBillingSubgroupId() + "', "
+                + bpv_ci.getFBItemId() + " = '" + item.getBItemId() + "', "
+                + bpv_ci.getFBillingInvoiceItemActive() + " = '" + item.getBillingInvoiceItemActive() + "', "
+                + bpv_ci.getFBillingInvoiceItemTotal() + " = '" + item.getBillingInvoiceItemTotal() + "', "
+                + bpv_ci.getFBillingInvoiceNumber() + " = '" + item.getBillingInvoiceNumber() + "', "
+                + bpv_ci.getFClaimId() + " = '" + item.getClaimId() + "', "
+                + bpv_ci.getFClaimNamet() + " = '" + item.getClaimNamet() + "', "
+                + bpv_ci.getFDepartmentId() + " = '" + item.getDepartmentId() + "', "
+                + bpv_ci.getFDepartmentNamet() + " = '" + item.getDepartmentNamet() + "', "
+                + bpv_ci.getFPatientVisitId() + " = '" + item.getPatientVisitId() + "',"
+                + bpv_ci.getFTBillingId() + " = '" + item.getTBillingId() + "',"
+                + bpv_ci.getFTBillingInvoiceDateTime() + " = " + item.getTBillingInvoiceDateTime() + ", "
+                + bpv_ci.getFTBillingInvoiceItemId() + " = " + item.getTBillingInvoiceItemId() + ", "
+                + bpv_ci.getFTBillingInvoiceItemNamet() + " = " + item.getTBillingInvoiceItemNamet() + ", "
+                + bpv_ci.getFTBillingInvoiceTime() + " = " + item.getTBillingInvoiceTime() + ", "
+                + bpv_ci.getFTOrderItemId() + " = " + item.getTOrderItemId() + ", "
+                + bpv_ci.getFTPatientId() + " = " + item.getTPatientId() + ", "
+                + bpv_ci.getFVisitId() + " = " + item.getVisitId() + ", "
+                + bpv_ci.getFVisitHn() + " = " + item.getVisitHn() + ", "
+                + bpv_ci.getFDepartmentNamet() + " = " + item.getDepartmentNamet() + ", "
+                + bpv_ci.getFVisitPatientSeftDoctor() + " = " + item.getVisitPatientSelfDoctor() + ", "
+                + bpv_ci.getFVisitVn() + " = " + item.getVisitVn() + ", "
+                + bpv_ci.getFBranchId() + " = " + item.getBranchId() + ", "
+                + bpv_ci.getFSysStatus() + " = " + item.getSysStatus() + ", "
+                + bpv_ci.getFItemDiscount() + " = " + item.getItemDiscount() + ", "
+                + bpv_ci.getFItemPaid() + " = " + item.getItemPaid() + ", "
+                + bpv_ci.getFItemTotal() + " = " + item.getItemTotal() + ", "
+                + bpv_ci.getFItemNametEditStatus() + " = '" + item.getItemNametEditStatus() + "', "
+                + bpv_ci.getFPatientVisitContactId() + " = '" + item.getPatientVisitContactId() + "', "
+                + bpv_ci.getFFItemGroupId() + " = '" + item.getFItemGroupId() + "' "
+                + "Where " + bpv_ci.getFPatientVisitContactItemId() + " = '" + item.getPatientVisitContactItemId() + "'";
+        max = item.getPatientVisitId();
+      }
+      chk = st.executeUpdate(sql);
+      conn.close();
+    } catch (Exception ex) {
+      Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+      max = ex.getMessage();
+    }
+    return max;
+  }
+    public BackTPatientVisitContact setCastPatientVisitContact(BackTPatientVisitFunds bpv_f) {
+        bpv_c = new BackTPatientVisitContact();
+        bpv_c.setBServicePointId(bpv_f.getBServicePointId());
+        bpv_c.setBVisitClinicId(bpv_f.getBVisitClinicId());
+        bpv_c.setBranchId(bpv_f.getBranchId());
+        bpv_c.setDepartmentNamet(bpv_f.getDepartmentNamet());
+        bpv_c.setDoctorNamet(bpv_f.getDoctorNamet());
+        bpv_c.setPatientFullnamet(bpv_f.getPatientFullnamet());
+        bpv_c.setPatientImportId(bpv_f.getPatientImportId());
+        bpv_c.setPatientVisitId(bpv_f.getPatientVisitId());
+        bpv_c.setSysStatus(bpv_f.getSysStatus());
+        bpv_c.setTPatientId(bpv_f.getTPatientId());
+        bpv_c.setVisitBeginVisitTime(bpv_f.getVisitBeginVisitTime());
+        bpv_c.setVisitClaimId(bpv_f.getVisitClaimId());
+        bpv_c.setVisitClaimNamet(bpv_f.getVisitClaimNamet());
+        bpv_c.setVisitContactId(bpv_f.getVisitContactId());
+        bpv_c.setVisitDate(bpv_f.getVisitDate());
+        bpv_c.setVisitDiagnosisNotice(bpv_f.getVisitDiagnosisNotice());
+        bpv_c.setVisitDiscount(bpv_f.getVisitDiscount());
+        bpv_c.setVisitFinancialDischargeTime(bpv_f.getVisitFinancialDischargeTime());
+        bpv_c.setVisitFirstVisit(bpv_f.getVisitFirstVisit());
+        bpv_c.setVisitHn(bpv_f.getVisitHn());
+        bpv_c.setVisitHospitalService(bpv_f.getVisitHospitalService());
+        bpv_c.setVisitNotice(bpv_f.getVisitNotice());
+        bpv_c.setVisitPaid(bpv_f.getVisitPaid());
+        bpv_c.setVisitPaidId(bpv_f.getVisitPaidId());
+        bpv_c.setVisitPaidNamet(bpv_f.getVisitPaidNamet());
+        bpv_c.setVisitPatientAge(bpv_f.getVisitPatientAge());
+        bpv_c.setVisitPatientSelfDoctor(bpv_f.getVisitPatientSelfDoctor());
+        bpv_c.setVisitTotal(bpv_f.getVisitTotal());
+        bpv_c.setVisitVn(bpv_f.getVisitVn());
+        bpv_c.setVisitContactNamet(bpv_f.getVisitContactNamet());
+        bpv_c.setPatientVisitContactId(bpv_f.getPatientVisitFundsId());
+        bpv_c.setVisitContactJoinId(bpv_f.getVisitContactJoinId());
+        bpv_c.setVisitContactJoinNamet(bpv_f.getVisitContactJoinNamet());
+        return bpv_c;
+    }
+    public BackTPatientVisitContactItem setCastPatientVisitContactItem(BackTPatientVisitFundsItem bpv_fi){
+        bpv_ci = new BackTPatientVisitContactItem();
+        bpv_ci.setBItemBillingSubgroupId(bpv_fi.getBItemBillingSubgroupId());
+        bpv_ci.setBItemId(bpv_fi.getBItemId());
+        bpv_ci.setBillingInvoiceItemActive(bpv_fi.getBillingInvoiceItemActive());
+        bpv_ci.setBillingInvoiceItemTotal(bpv_fi.getBillingInvoiceItemTotal());
+        bpv_ci.setBillingInvoiceNumber(bpv_fi.getBillingInvoiceNumber());
+
+        bpv_ci.setClaimId(bpv_fi.getClaimId());
+        bpv_ci.setClaimNamet(bpv_fi.getClaimNamet());
+        bpv_ci.setDepartmentNamet(bpv_fi.getDepartmentNamet());
+        bpv_ci.setPatientVisitContactItemId(bpv_fi.getPatientVisitFundsItemId());
+        bpv_ci.setPatientVisitId(bpv_fi.getPatientVisitId());
+
+        bpv_ci.setTBillingId(bpv_fi.getTBillingId());
+        bpv_ci.setTBillingInvoiceDateTime(bpv_fi.getTBillingInvoiceDateTime());
+        bpv_ci.setTBillingInvoiceItemId(bpv_fi.getTBillingInvoiceItemId());
+        bpv_ci.setTBillingInvoiceItemNamet(bpv_fi.getTBillingInvoiceItemNamet());
+        bpv_ci.setTBillingInvoiceTime(bpv_fi.getTBillingInvoiceTime());
+
+        bpv_ci.setTOrderItemId(bpv_fi.getTOrderItemId());
+        bpv_ci.setTPatientId(bpv_fi.getTPatientId());
+        bpv_ci.setTPaymentId(bpv_fi.getTPaymentId());
+        bpv_ci.setVisitId(bpv_fi.getVisitId());
+        bpv_ci.setVisitPatientSelfDoctor(bpv_fi.getVisitPatientSelfDoctor());
+
+        bpv_ci.setVisitVn(bpv_fi.getVisitVn());
+        bpv_ci.setDepartmentId(bpv_fi.getDepartmentId());
+        bpv_ci.setVisitHn(bpv_fi.getVisitHn());
+        bpv_ci.setBranchId(bpvdb.config1.StringNull(bpv_fi.getBranchId()));
+        bpv_ci.setSysStatus(bpvdb.config1.StringNull(bpv_fi.getSysStatus()));
+
+        bpv_ci.setItemDiscount(bpv_fi.getItemDiscount());
+        bpv_ci.setItemPaid(bpv_fi.getItemPaid());
+        bpv_ci.setItemTotal(bpv_fi.getItemTotal());
+        bpv_ci.setItemNametEditStatus(bpvdb.config1.StringNull(bpv_fi.getItemNametEditStatus()));
+        bpv_ci.setItemTotalOrginal(bpv_fi.getItemTotal());
+
+        bpv_ci.setRecordStatus(bpv_fi.getRecordStatus());
+        bpv_ci.setPatientVisitItemId(bpvdb.config1.StringNull(bpv_fi.getPatientVisitItemId()));
+        bpv_ci.setPatientVisitContactId(bpvdb.config1.StringNull(bpv_fi.getPatientVisitFundsId()));
+        bpv_ci.setFItemGroupId(bpvdb.config1.StringNull(bpv_fi.getFItemGroupId()));
+        bpv_ci.setItemNametEdit(bpvdb.config1.StringNull(bpv_fi.getItemNametEditStatus()));
+
+        bpv_ci.setItemTotalEdit(bpv_fi.getItemTotalEdit());
+        bpv_ci.setItemTotalEditStatus(bpvdb.config1.StringNull(bpv_fi.getItemTotalEditStatus()));
+        return bpv_ci;
+    }
+//    public BackTPatientVisitContactItem setCastPatientVisitContactItem(BackTPatientVisitItem bpvi){
+//        bpv_ci = new BackTPatientVisitContactItem();
+//        bpv_ci.setBItemBillingSubgroupId(bpvi.getBItemBillingSubgroupId());
+//        bpv_ci.setBItemId(bpvi.getBItemId());
+//        bpv_ci.setBillingInvoiceItemActive(bpvi.getBillingInvoiceItemActive());
+//        bpv_ci.setBillingInvoiceItemTotal(bpvi.getBillingInvoiceItemTotal());
+//        bpv_ci.setBillingInvoiceNumber(bpvi.getBillingInvoiceNumber());
+//
+//        bpv_ci.setClaimId(bpvi.getClaimId());
+//        bpv_ci.setClaimNamet(bpvi.getClaimNamet());
+//        bpv_ci.setDepartmentNamet(bpvi.getDepartmentNamet());
+//        bpv_ci.setPatientVisitContactItemId("");
+//        bpv_ci.setPatientVisitId(bpvi.getPatientVisitId());
+//
+//        bpv_ci.setTBillingId(bpvi.getTBillingId());
+//        bpv_ci.setTBillingInvoiceDateTime(bpvi.getTBillingInvoiceDateTime());
+//        bpv_ci.setTBillingInvoiceItemId(bpvi.getTBillingInvoiceItemId());
+//        bpv_ci.setTBillingInvoiceItemNamet(bpvi.getTBillingInvoiceItemNamet());
+//        bpv_ci.setTBillingInvoiceTime(bpvi.getTBillingInvoiceTime());
+//
+//        bpv_ci.setTOrderItemId(bpvi.getTOrderItemId());
+//        bpv_ci.setTPatientId(bpvi.getTPatientId());
+//        bpv_ci.setTPaymentId(bpvi.getTPaymentId());
+//        bpv_ci.setVisitId(bpvi.getVisitId());
+//        bpv_ci.setVisitPatientSelfDoctor(bpvi.getVisitPatientSelfDoctor());
+//
+//        bpv_ci.setVisitVn(bpvi.getVisitVn());
+//        bpv_ci.setDepartmentId(bpvi.getDepartmentId());
+//        bpv_ci.setVisitHn(bpvi.getVisitHn());
+//        bpv_ci.setBranchId(bpvdb.config1.StringNull(bpvi.getBranchId()));
+//        bpv_ci.setSysStatus(bpvdb.config1.StringNull(bpvi.getSysStatus()));
+//
+//        bpv_ci.setItemDiscount(bpvi.getItemDiscount());
+//        bpv_ci.setItemPaid(bpvi.getItemPaid());
+//        bpv_ci.setItemTotal(bpvi.getItemTotal());
+//        bpv_ci.setItemNametEditStatus(bpvdb.config1.StringNull(bpvi.getEditStatus()));
+//        bpv_ci.setItemTotalOrginal(bpvi.getItemTotal());
+//
+//        bpv_ci.setRecordStatus("0");
+//        bpv_ci.setPatientVisitItemId(bpvdb.config1.StringNull(bpvi.getPatientVisitBillingItemId()));
+//        bpv_ci.setFItemGroupId(bpvdb.config1.StringNull(bpvi.getFItemGroupId()));
+//        return bpv_ci;
+//    }
+    public BackTPatientVisitContactBillingItem setCastPatientVisitContactBillingItem(BackTPatientVisitContactItem bpv_ci) {
+        bpv_cbi = new BackTPatientVisitContactBillingItem();
+        bpv_cbi.setBItemBillingSubgroupId(bpv_ci.getBItemBillingSubgroupId());
+        bpv_cbi.setBItemId(bpv_ci.getBItemId());
+        bpv_cbi.setBillingInvoiceItemActive(bpv_ci.getBillingInvoiceItemActive());
+        bpv_cbi.setBillingInvoiceItemTotal(bpv_ci.getBillingInvoiceItemTotal());
+        bpv_cbi.setBillingInvoiceNumber(bpv_ci.getBillingInvoiceNumber());
+
+        bpv_cbi.setClaimId(bpv_ci.getClaimId());
+        bpv_cbi.setClaimNamet(bpv_ci.getClaimNamet());
+        bpv_cbi.setDepartmentNamet(bpv_ci.getDepartmentNamet());
+        bpv_cbi.setPatientVisitContactItemId("");
+        bpv_cbi.setPatientVisitId(bpv_ci.getPatientVisitId());
+
+        bpv_cbi.setTBillingId(bpv_ci.getTBillingId());
+        bpv_cbi.setTBillingInvoiceDateTime(bpv_ci.getTBillingInvoiceDateTime());
+        bpv_cbi.setTBillingInvoiceItemId(bpv_ci.getTBillingInvoiceItemId());
+        bpv_cbi.setTBillingInvoiceItemNamet(bpv_ci.getTBillingInvoiceItemNamet());
+        bpv_cbi.setTBillingInvoiceTime(bpv_ci.getTBillingInvoiceTime());
+
+        bpv_cbi.setTOrderItemId(bpv_ci.getTOrderItemId());
+        bpv_cbi.setTPatientId(bpv_ci.getTPatientId());
+        bpv_cbi.setTPaymentId(bpv_ci.getTPaymentId());
+        bpv_cbi.setVisitId(bpv_ci.getVisitId());
+        bpv_cbi.setVisitPatientSelfDoctor(bpv_ci.getVisitPatientSelfDoctor());
+
+        bpv_cbi.setVisitVn(bpv_ci.getVisitVn());
+        bpv_cbi.setDepartmentId(bpv_ci.getDepartmentId());
+        bpv_cbi.setVisitHn(bpv_ci.getVisitHn());
+        bpv_cbi.setBranchId(bpvdb.config1.StringNull(bpv_ci.getBranchId()));
+        bpv_cbi.setSysStatus(bpvdb.config1.StringNull(bpv_ci.getSysStatus()));
+
+        bpv_cbi.setItemDiscount(bpv_ci.getItemDiscount());
+        bpv_cbi.setItemPaid(bpv_ci.getItemPaid());
+        bpv_cbi.setItemTotal(bpv_ci.getItemTotal());
+        bpv_cbi.setEditStatus(bpvdb.config1.StringNull(bpv_ci.getItemNametEditStatus()));
+        bpv_cbi.setRecordStatus("0");
+
+        bpv_cbi.setPatientVisitContactItemId(bpvdb.config1.StringNull(bpv_ci.getPatientVisitContactItemId()));
+        bpv_cbi.setFItemGroupId(bpvdb.config1.StringNull(bpv_ci.getFItemGroupId()));
+        bpv_cbi.setPatientVisitContactBillingItemActive("1");
+        return bpv_cbi;
+    }
+    public BackTPatientVisitContactBillingItem setCastPatientVisitContactBillingItem(BackTPatientVisitFundsItem bpv_fi) {
+        bpv_cbi = new BackTPatientVisitContactBillingItem();
+        bpv_cbi.setBItemBillingSubgroupId(bpv_fi.getBItemBillingSubgroupId());
+        bpv_cbi.setBItemId(bpv_fi.getBItemId());
+        bpv_cbi.setBillingInvoiceItemActive(bpv_fi.getBillingInvoiceItemActive());
+        bpv_cbi.setBillingInvoiceItemTotal(bpv_fi.getBillingInvoiceItemTotal());
+        bpv_cbi.setBillingInvoiceNumber(bpv_fi.getBillingInvoiceNumber());
+
+        bpv_cbi.setClaimId(bpv_fi.getClaimId());
+        bpv_cbi.setClaimNamet(bpv_fi.getClaimNamet());
+        bpv_cbi.setDepartmentNamet(bpv_fi.getDepartmentNamet());
+        bpv_cbi.setPatientVisitContactItemId("");
+        bpv_cbi.setPatientVisitId(bpv_fi.getPatientVisitId());
+
+        bpv_cbi.setTBillingId(bpv_fi.getTBillingId());
+        bpv_cbi.setTBillingInvoiceDateTime(bpv_fi.getTBillingInvoiceDateTime());
+        bpv_cbi.setTBillingInvoiceItemId(bpv_fi.getTBillingInvoiceItemId());
+        bpv_cbi.setTBillingInvoiceItemNamet(bpv_fi.getTBillingInvoiceItemNamet());
+        bpv_cbi.setTBillingInvoiceTime(bpv_fi.getTBillingInvoiceTime());
+
+        bpv_cbi.setTOrderItemId(bpv_fi.getTOrderItemId());
+        bpv_cbi.setTPatientId(bpv_fi.getTPatientId());
+        bpv_cbi.setTPaymentId(bpv_fi.getTPaymentId());
+        bpv_cbi.setVisitId(bpv_fi.getVisitId());
+        bpv_cbi.setVisitPatientSelfDoctor(bpv_fi.getVisitPatientSelfDoctor());
+
+        bpv_cbi.setVisitVn(bpv_fi.getVisitVn());
+        bpv_cbi.setDepartmentId(bpv_fi.getDepartmentId());
+        bpv_cbi.setVisitHn(bpv_fi.getVisitHn());
+        bpv_cbi.setBranchId(bpvdb.config1.StringNull(bpv_fi.getBranchId()));
+        bpv_cbi.setSysStatus(bpvdb.config1.StringNull(bpv_fi.getSysStatus()));
+
+        bpv_cbi.setItemDiscount(bpv_fi.getItemDiscount());
+        bpv_cbi.setItemPaid(bpv_fi.getItemPaid());
+        bpv_cbi.setItemTotal(bpv_fi.getItemTotal());
+        bpv_cbi.setEditStatus(bpvdb.config1.StringNull(bpv_fi.getItemNametEditStatus()));
+        bpv_cbi.setRecordStatus("0");
+
+        bpv_cbi.setPatientVisitContactItemId(bpvdb.config1.StringNull(bpv_fi.getPatientVisitFundsItemId()));
+        bpv_cbi.setFItemGroupId(bpvdb.config1.StringNull(bpv_fi.getFItemGroupId()));
+        bpv_cbi.setPatientVisitContactBillingItemActive("1");
+        bpv_cbi.setPatientVisitItemId(bpv_fi.getPatientVisitItemId());
+        bpv_cbi.setPatientVisitItemId(bpvdb.config1.StringNull(bpv_fi.getPatientVisitItemId()));
+        return bpv_cbi;
+    }
+//    public BackTPatientVisitContact setCastPatientVisitContact(BackTPatientVisit bpv){
+//        bpv_c = new BackTPatientVisitContact();
+//        bpv_c.setBServicePointId(bpv.getBServicePointId());
+//        bpv_c.setBVisitClinicId(bpv.getBVisitClinicId());
+//        bpv_c.setBranchId(bpv.getBranchId());
+//        bpv_c.setDepartmentNamet(bpv.getDepartmentNamet());
+//        bpv_c.setDoctorNamet(bpv.getDoctorNamet());
+//        bpv_c.setPatientFullnamet(bpv.getPatientFullnamet());
+//        bpv_c.setPatientImportId(bpv.getPatientImportId());
+//        bpv_c.setPatientVisitId(bpv.getPatientVisitId());
+//        bpv_c.setSysStatus(bpv.getSysStatus());
+//        bpv_c.setTPatientId(bpv.getTPatientId());
+//        bpv_c.setVisitBeginVisitTime(bpv.getVisitBeginVisitTime());
+//        bpv_c.setVisitClaimId(bpv.getVisitClaimId());
+//        bpv_c.setVisitClaimNamet(bpv.getVisitClaimNamet());
+//        bpv_c.setVisitContactId(bpv.getVisitContactId());
+//        bpv_c.setVisitDate(bpv.getVisitDate());
+//        bpv_c.setVisitDiagnosisNotice(bpv.getVisitDiagnosisNotice());
+//        bpv_c.setVisitDiscount(bpv.getVisitDiscount());
+//        bpv_c.setVisitFinancialDischargeTime(bpv.getVisitFinancialDischargeTime());
+//        bpv_c.setVisitFirstVisit(bpv.getVisitFirstVisit());
+//        bpv_c.setVisitHn(bpv.getVisitHn());
+//        bpv_c.setVisitHospitalService(bpv.getVisitHospitalService());
+//        bpv_c.setVisitNotice(bpv.getVisitNotice());
+//        bpv_c.setVisitPaid(bpv.getVisitPaid());
+//        bpv_c.setVisitPaidId(bpv.getVisitPaidId());
+//        bpv_c.setVisitPaidNamet(bpv.getVisitPaidNamet());
+//        bpv_c.setVisitPatientAge(bpv.getVisitPatientAge());
+//        bpv_c.setVisitPatientSelfDoctor(bpv.getVisitPatientSelfDoctor());
+//        bpv_c.setVisitTotal(bpv.getVisitTotal());
+//        bpv_c.setVisitVn(bpv.getVisitVn());
+//        bpv_c.setVisitContactNamet(bpv.getVisitContactNamet());
+//        bpv_c.setPatientVisitContactId("");
+//        bpv_c.setContractPayerNumber(bpv.getContractPayerNumber());
+//        bpv_c.setCloseDayDate(bpv.getCloseDayDate());
+//        bpv_c.setVisitContactJoinId(bpv.getVisitContactJoinId());
+//        bpv_c.setVisitContactJoinNamet(bpv.getVisitContactJoinNamet());
+//        return bpv_c;
+//    }
+    public BackTPatientVisitContactBilling setCastPatientVisitContactBilling(BackTPatientVisitContact bpv_c) {
+        bpv_cb = new BackTPatientVisitContactBilling();
+        bpv_cb.setBServicePointId(bpv_c.getBServicePointId());
+        bpv_cb.setBVisitClinicId(bpv_c.getBVisitClinicId());
+        bpv_cb.setBranchId(bpv_c.getBranchId());
+        bpv_cb.setDepartmentNamet(bpv_c.getDepartmentNamet());
+        bpv_cb.setDoctorNamet(bpv_c.getDoctorNamet());
+
+        bpv_cb.setPatientFullnamet(bpv_c.getPatientFullnamet());
+        bpv_cb.setPatientImportId(bpv_c.getPatientImportId());
+        bpv_cb.setPatientVisitId(bpv_c.getPatientVisitId());
+        bpv_cb.setSysStatus(bpv_c.getSysStatus());
+        bpv_cb.setTPatientId(bpv_c.getTPatientId());
+
+        bpv_cb.setVisitBeginVisitTime(bpv_c.getVisitBeginVisitTime());
+        bpv_cb.setVisitClaimId(bpv_c.getVisitClaimId());
+        bpv_cb.setVisitClaimNamet(bpv_c.getVisitClaimNamet());
+        bpv_cb.setVisitContactId(bpv_c.getVisitContactId());
+        bpv_cb.setVisitDate(bpv_c.getVisitDate());
+
+        bpv_cb.setVisitDiagnosisNotice(bpv_c.getVisitDiagnosisNotice());
+        bpv_cb.setVisitDiscount(bpv_c.getVisitDiscount());
+        bpv_cb.setVisitFinancialDischargeTime(bpv_c.getVisitFinancialDischargeTime());
+        bpv_cb.setVisitFirstVisit(bpv_c.getVisitFirstVisit());
+        bpv_cb.setVisitHn(bpv_c.getVisitHn());
+
+        bpv_cb.setVisitHospitalService(bpv_c.getVisitHospitalService());
+        bpv_cb.setVisitNotice(bpv_c.getVisitNotice());
+        bpv_cb.setVisitPaid(bpv_c.getVisitPaid());
+        bpv_cb.setVisitPaidId(bpv_c.getVisitPaidId());
+        bpv_cb.setVisitPaidNamet(bpv_c.getVisitPaidNamet());
+
+        bpv_cb.setVisitPatientAge(bpv_c.getVisitPatientAge());
+        bpv_cb.setVisitPatientSelfDoctor(bpv_c.getVisitPatientSelfDoctor());
+        bpv_cb.setVisitTotal(bpv_c.getVisitTotal());
+        bpv_cb.setVisitVn(bpv_c.getVisitVn());
+        bpv_cb.setVisitContactNamet(bpv_c.getVisitContactNamet());
+
+        bpv_cb.setPatientVisitContactId(bpv_c.getPatientVisitContactId());
+        bpv_cb.setPatientVisitContactBillingId("");
+        bpv_cb.setPatientVisitContactBillingActive("1");
+        bpv_cb.setBillingCoverNumber("");
+        bpv_cb.setBillingInvoiceNumber("");
+
+        bpv_cb.setStatusPrint("0");
+        bpv_cb.setStatusPayment("0");
+
+        return bpv_cb;
+    }
+    public BackTPatientVisitContactBilling setCastPatientVisitContactBilling(BackTPatientVisitFunds bpv_f) {
+        bpv_cb = new BackTPatientVisitContactBilling();
+        bpv_cb.setBServicePointId(bpv_f.getBServicePointId());
+        bpv_cb.setBVisitClinicId(bpv_f.getBVisitClinicId());
+        bpv_cb.setBranchId(bpv_f.getBranchId());
+        bpv_cb.setDepartmentNamet(bpv_f.getDepartmentNamet());
+        bpv_cb.setDoctorNamet(bpv_f.getDoctorNamet());
+
+        bpv_cb.setPatientFullnamet(bpv_f.getPatientFullnamet());
+        bpv_cb.setPatientImportId(bpv_f.getPatientImportId());
+        bpv_cb.setPatientVisitId(bpv_f.getPatientVisitId());
+        bpv_cb.setSysStatus(bpv_f.getSysStatus());
+        bpv_cb.setTPatientId(bpv_f.getTPatientId());
+
+        bpv_cb.setVisitBeginVisitTime(bpv_f.getVisitBeginVisitTime());
+        bpv_cb.setVisitClaimId(bpv_f.getVisitClaimId());
+        bpv_cb.setVisitClaimNamet(bpv_f.getVisitClaimNamet());
+        bpv_cb.setVisitContactId(bpv_f.getVisitContactId());
+        bpv_cb.setVisitDate(bpv_f.getVisitDate());
+
+        bpv_cb.setVisitDiagnosisNotice(bpv_f.getVisitDiagnosisNotice());
+        bpv_cb.setVisitDiscount(bpv_f.getVisitDiscount());
+        bpv_cb.setVisitFinancialDischargeTime(bpv_f.getVisitFinancialDischargeTime());
+        bpv_cb.setVisitFirstVisit(bpv_f.getVisitFirstVisit());
+        bpv_cb.setVisitHn(bpv_f.getVisitHn());
+
+        bpv_cb.setVisitHospitalService(bpv_f.getVisitHospitalService());
+        bpv_cb.setVisitNotice(bpv_f.getVisitNotice());
+        bpv_cb.setVisitPaid(bpv_f.getVisitPaid());
+        bpv_cb.setVisitPaidId(bpv_f.getVisitPaidId());
+        bpv_cb.setVisitPaidNamet(bpv_f.getVisitPaidNamet());
+
+        bpv_cb.setVisitPatientAge(bpv_f.getVisitPatientAge());
+        bpv_cb.setVisitPatientSelfDoctor(bpv_f.getVisitPatientSelfDoctor());
+        bpv_cb.setVisitTotal(bpv_f.getVisitTotal());
+        bpv_cb.setVisitVn(bpv_f.getVisitVn());
+        bpv_cb.setVisitContactNamet(bpv_f.getVisitContactNamet());
+
+        bpv_cb.setPatientVisitContactId(bpv_f.getPatientVisitFundsId());
+        bpv_cb.setPatientVisitContactBillingId("");
+        bpv_cb.setPatientVisitContactBillingActive("1");
+        bpv_cb.setBillingCoverNumber("");
+        bpv_cb.setBillingInvoiceNumber("");
+
+        bpv_cb.setStatusPrint("0");
+        bpv_cb.setStatusPayment("0");
+
+        return bpv_cb;
+    }
+    public void setSavePatientVisitContactStatusBilling(String branch_id, String sub_system,
+          String patient_visit_contact_id, String billing_number) {
+        String sql = "";
+        try {
+            Connection conn = bpvdb.config1.getConnectionBangna();
+            Statement st = conn.createStatement();
+            sql = "Update " + bpv_c.getBackTPatientVisitContact()
+                + " Set " + bpv_c.getFStatusBilling() + "='1' "
+                + "Where " + bpv_c.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "'";
+            st.executeUpdate(sql);
+            conn.close();
+        }
+        catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+//    public Integer setReceiveContact(String branch_id, String patient_import_id, String sub_system_id, String flag) {
+//        String sql = "", patient_visit_contact_id = "";
+//        Integer cnt = Integer.valueOf(0);
+//        Vector v_patient_visit = new Vector();
+//        Vector v_patient_visit_item = new Vector();
+//        try {
+//            v_patient_visit = bpvdb.getBackTPatientVisit(branch_id, patient_import_id, sub_system_id, flag);
+//            for (int i = 0; i <= v_patient_visit.size() - 1; i++){
+//                try {
+//                    bpvdb.bpv = new BackTPatientVisit();
+//                    bpvdb.bpv = (BackTPatientVisit)v_patient_visit.get(i);
+//                    if (bpvdb.bpv.getVisitHn().equals("535003844"))
+//                    sql = "";
+//                    bpv_c = new BackTPatientVisitContact();
+//                    bpv_c = setCastPatientVisitContact(bpvdb.bpv);
+//                    bpv_c.setPatientVisitContactActive("1");
+//                    bpv_c.setStatusBilling("0");
+//                    patient_visit_contact_id = setSaveBackTPatientVisitContact(bpv_c);
+//                    cnt++;
+//                    v_patient_visit_item = new Vector();
+//                    v_patient_visit_item = bpvdb.getBackTPatientVisitItem(bpvdb.bpv.getPatientVisitId(), "", "", "", "subsystem_import");
+//                    for (int j = 0; j <= v_patient_visit_item.size() - 1; j++) {
+//                      bpvdb.bpvi = new BackTPatientVisitItem();
+//                      bpv_ci = new BackTPatientVisitContactItem();
+//                      bpvdb.bpvi = (BackTPatientVisitItem)v_patient_visit_item.get(j);
+//                      bpv_ci = setCastPatientVisitContactItem(bpvdb.bpvi);
+//                      bpv_ci.setPatientVisitContactId(patient_visit_contact_id);
+//                      setSaveBackTPatientVisitContactItem(bpv_ci);
+//                    }
+//                } catch (Exception ex) {
+//                    Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }catch (Exception ex) {
+//          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return cnt;
+//    }
+    public void setUpdatePatientVisitContactItemEditClear(String branch_id, String patient_visit_contact_id) {
+        String sql = "";
+        try {
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          sql = "Update " + bpv_ci.getBackTPatientVisitContactItem()
+                  + " Set " + bpv_ci.getFItemNametEdit() + "='', " + bpv_ci.getFItemNametEditStatus() + "='', "
+                  + bpv_ci.getFItemTotalEditStatus() + "='', " + bpv_ci.getFItemTotalEdit() + "=0.0 "
+                  + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "'";
+
+          st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void setUpdatePatientVisitContactItemNametEdit(String branch_id, String patient_visit_contact_item_id, String item_namet) {
+        String sql = "";
+        try{
+          item_namet = item_namet.replace("'", "''");
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          sql = "Update " + bpv_ci.getBackTPatientVisitContactItem() 
+                  + " Set " + bpv_ci.getFItemNametEdit() + "='" + item_namet + "', " + bpv_ci.getFItemNametEditStatus() + "='1', "
+                  + bpv_ci.getFRecordStatus() + "='1' "
+                  + "Where " + bpv_ci.getFPatientVisitContactItemId() + "='" + patient_visit_contact_item_id + "'";
+
+          st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void setUpdatePatientVisitContactItemTotalEdit(String branch_id, String patient_visit_contact_item_id, String item_price) {
+        String sql = "";
+        try{
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          sql = "Update " + bpv_ci.getBackTPatientVisitContactItem()
+                  + " Set " + bpv_ci.getFItemTotalEdit() + "='" + item_price + "', " + bpv_ci.getFItemTotalEditStatus() + "='1', "
+                  + bpv_ci.getFRecordStatus() + "='1' "
+                  + "Where " + bpv_ci.getFPatientVisitContactItemId() + "='" + patient_visit_contact_item_id + "'";
+
+          st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String setUpdatePatientVisitContact(String branch_id, String patient_visit_contact_id, String patient_fullnamet,
+            String visit_vn, String visit_hn, String visit_date, String claim_id, String paid_id, String visit_notive,
+            String claim_name, String paid_name, String visit_contact_id, String visit_contact_namet, String visit_contact_join_id,
+            String visit_contact_join_namet, String visitTotal) {
+        String sql = "";
+        Integer chk=0;
+        try{
+          patient_fullnamet = patient_fullnamet.replace("'", "''");
+          claim_name = claim_name.replace("'", "''");
+          paid_name = paid_name.replace("'", "''");
+          visit_contact_namet = visit_contact_namet.replace("'", "''");
+          visit_contact_join_namet = visit_contact_join_namet.replace("'", "''");
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          if(visitTotal.equals("")) visitTotal = "0.0";
+          sql = "Update " + bpv_c.getBackTPatientVisitContact()
+            + " Set " + bpv_c.getFPatientFullnamet() + "='" + patient_fullnamet + "',"
+            + bpv_c.getFVisitHn() + "='" + visit_hn + "'," + bpv_c.getFVisitVn() + "='" + visit_vn + "',"
+            + bpv_c.getFVisitDate() + "='" + visit_date + "'," + bpv_c.getFVisitClaimId() + "='" + claim_id + "',"
+            + bpv_c.getFVisitPaidId() + "='" + paid_id + "', " + bpv_c.getFVisitNotice() + "='" + visit_notive + "', "
+            + bpv_c.getFVisitClaimNamet() + "='" + claim_name + "', " + bpv_c.getFVisitPaidNamet() + "='" + paid_name + "', "
+            + bpv_c.getFVisitContactId() + "='" + visit_contact_id + "', " + bpv_c.getFVisitContactNamet() + "='" + visit_contact_namet + "', "
+            + bpv_c.getFVisitContactJoinId() + "='" + visit_contact_join_id + "', " + bpv_c.getFVisitContactJoinNamet() + "='" + visit_contact_join_namet + "', "
+            +bpv_c.getFVisitTotal()+"="+visitTotal+" "
+            + "Where " + bpv_c.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "'";
+
+          chk = st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return chk.toString();
+    }
+    public void setUpdatePatientVisitContactVoid(String branch_id, String patient_visit_contact_id) {
+        String sql = "";
+        try {
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          sql = "Update " + bpv_c.getBackTPatientVisitContact()
+                  + " Set " + bpv_c.getFPatientVisitContactActive() + "='3' "
+                  + "Where " + bpv_c.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "'";
+
+          st.executeUpdate(sql);
+          sql = "Update " + bpv_ci.getBackTPatientVisitContactItem()
+                  + " Set " + bpv_ci.getFBillingInvoiceItemActive() + "='3' "
+                  + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "'";
+
+          st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void setUpdatePatientVisitContactItemEditCommit(String branch_id, String patient_visit_contact_id) {
+    String sql = "";
+    try {
+        Connection conn = bpvdb.config1.getConnectionBangna();
+        Statement st = conn.createStatement();
+        sql = "Update " + bpv_ci.getBackTPatientVisitContactItem() 
+                + " Set " + bpv_ci.getFTBillingInvoiceItemNamet() + "=" + bpv_ci.getFItemNametEdit() + ", "
+                + bpv_ci.getFItemNametEditStatus() + "='2' "
+                + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "' and "
+                + bpv_ci.getFItemNametEditStatus() + "='1'";
+
+        st.executeUpdate(sql);
+        sql = "Update " + bpv_ci.getBackTPatientVisitContactItem() 
+                + " Set " + bpv_ci.getFItemTotal() + "=" + bpv_ci.getFItemTotalEdit() + ", "
+                + bpv_ci.getFItemTotalEditStatus() + "='2' "
+                + "Where " + bpv_ci.getFPatientVisitContactId() + "='" + patient_visit_contact_id + "' and "
+                + bpv_ci.getFItemTotalEditStatus() + "='1'";
+
+        st.executeUpdate(sql);
+        conn.close();
+        } catch (Exception ex) {
+            Logger.getLogger(BackTPatientVisitDB1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String getComboContactJoin(String branch_id, String visit_hn, String date_end, String paid_id, String contact_id, String flag){
+        String txt="", sql="", date_search="", paid_search="", contact_search="", hn_search="";
+        Connection conn;
+        Statement st;
+            try {
+                txt="<select id='cbo_contact_debtor' name='cbo_contact_debtor' onchange='setcontact();'><option value='' selected></option>";
+                conn = bpvdb.config1.getConnectionBangna();
+                st = conn.createStatement();
+                if (!visit_hn.equals("")) {
+                    hn_search = " and " + bpv_c.getFVisitHn() + " like '%" + visit_hn + "'";
+                }
+                if (!date_end.equals("")) {
+                    date_search = " and " + bpv_c.getFCloseDayDate() + " <= '" + bpvdb.config1.DateFormatShow2DB(date_end, "ddMMyyyy") + "' ";
+                }
+                if (!paid_id.equals("")) {
+                    paid_search = " and " + bpv_c.getFVisitPaidId() + " like '" + paid_id + "'%";
+                }
+                if(!contact_id.equals("")){
+                    contact_search = " and " + bpv_c.getFVisitContactJoinNamet() + " like '" + contact_id + "%'";
+                }
+                sql="Select distinct "+bpv_c.getFVisitContactJoinId()+","+bpv_c.getFVisitContactJoinNamet()+" From "+bpv_c.getBackTPatientVisitContact()
+                +" Where " + bpv_c.getFBranchId()+"='" + branch_id + "' and "
+                    + bpv_c.getFStatusBilling()+"='0' and "
+                    + bpv_c.getFPatientVisitContactActive() + "='1' " +hn_search+date_search+paid_search+contact_search+" "
+                    + "Order By "+bpv_c.getFVisitContactJoinNamet();
+                ResultSet rs = st.executeQuery(sql);
+                while(rs.next()){
+//                    if(f_visit_type.getFVisitTypeId().equals(selected)){
+                        txt += "<option value='"+rs.getString(bpv_c.getFVisitContactJoinId())+"' >"+rs.getString(bpv_c.getFVisitContactJoinNamet())+"</option>";
+//                    }else{
+//                        txt += "<option value='"+f_visit_type.getFVisitTypeId()+"' >"+f_visit_type.getVisitTypeDescription()+"</option>";
+//                    }
+                }
+                rs.close();
+                conn.close();
+            } catch (Exception ex) {
+                Logger.getLogger(BackTPatientVisitContactDB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return txt+"</select>";
+    }
+    public String getComboBillingContactJoin(String branch_id, String visit_hn, String date_end, String paid_id, String contact_id, String flag){
+        String txt="", sql="", date_search="", paid_search="", contact_search="", hn_search="";
+        Connection conn;
+        Statement st;
+            try {
+//                txt="<select id='cbo_contact_cover' name='cbo_contact_cover' onchange='setcontactcover();'><option value='' selected></option>";
+                conn = bpvdb.config1.getConnectionBangna();
+                st = conn.createStatement();
+                if (!visit_hn.equals("")) {
+                    hn_search = " and " + bpv_cb.getFVisitHn() + " like '%" + visit_hn + "'";
+                }
+                if (!date_end.equals("")) {
+                    date_search = " and " + bpv_cb.getFCloseDayDate() + " <= '" + bpvdb.config1.DateFormatShow2DB(date_end, "ddMMyyyy") + "' ";
+                }
+                if (!paid_id.equals("")) {
+                    paid_search = " and " + bpv_cb.getFVisitPaidId() + " like '" + paid_id + "'%";
+                }
+                if(!contact_id.equals("")){
+                    contact_search = " and " + bpv_cb.getFVisitContactJoinNamet() + " like '" + contact_id + "%'";
+                }
+                if(flag.equals("combo_contact_join_prepare_debtor")){//bpv_c
+                    txt="<select id='divContactJoinPrepareDebtor' name='divContactJoinPrepareDebtor'><option value='' selected></option>";
+                sql="Select distinct "+bpv_c.getFVisitContactJoinId()+","+bpv_c.getFVisitContactJoinNamet()+" "
+                + "From "+bpv_c.getBackTPatientVisitContact()
+                +" Where " + bpv_c.getFBranchId()+"='" + branch_id + "' and "
+                    + bpv_c.getFStatusBilling()+" in ('0','1') and "//ตั้งหนี้แล้ว และไม่ต้อง checkว่าพิมพ์ใบปะหน้าแล้วหรือยัง
+                    + bpv_c.getFPatientVisitContactActive() + "='1' " +hn_search+date_search+paid_search+contact_search+" "
+                    + "Order By "+bpv_cb.getFVisitContactJoinNamet();
+                }else{//bpv_cb
+                    txt="<select id='divContactJoinCover' name='divContactJoinCover' ><option value='' selected></option>";
+                sql="Select distinct "+bpv_cb.getFVisitContactJoinId()+","+bpv_cb.getFVisitContactJoinNamet()+" "
+                + "From "+bpv_cb.getBackTPatientVisitContactBilling()
+                +" Where " + bpv_cb.getFBranchId()+"='" + branch_id + "' and "
+                    + bpv_cb.getFStatusPayment()+"='2' and "//ตั้งหนี้แล้ว และไม่ต้อง checkว่าพิมพ์ใบปะหน้าแล้วหรือยัง
+                    + bpv_cb.getFPatientVisitContactBillingActive() + "='1' " +hn_search+date_search+paid_search+contact_search+" "
+                    + "Order By "+bpv_c.getFVisitContactJoinNamet();
+                }
+                
+                ResultSet rs = st.executeQuery(sql);
+                while(rs.next()){
+//                    if(f_visit_type.getFVisitTypeId().equals(selected)){
+                        txt += "<option value='"+rs.getString(bpv_c.getFVisitContactJoinId())+"' >"+rs.getString(bpv_c.getFVisitContactJoinNamet())+"</option>";
+//                    }else{
+//                        txt += "<option value='"+f_visit_type.getFVisitTypeId()+"' >"+f_visit_type.getVisitTypeDescription()+"</option>";
+//                    }
+                }
+                rs.close();
+                conn.close();
+            } catch (Exception ex) {
+                Logger.getLogger(BackTPatientVisitContactDB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        return txt+"</select>";
+    }
+    public String getTrBillingPrepareBilling(String branch_id, String visit_hn, String date_end, String paid_id, String contact_id,
+            String flag) {
+        String node_parent = "", text_h = "", chk_print = "", chk_src = "", script = "", bpv_f_id="", cnt="", total="";
+//        BackTPatientVisitFunds bpv_f_max = new BackTPatientVisitFunds();
+        String visit_vn_min="", visit_vn_max="", visit_discharge_date="",hn_search="", date_search="", txt_hidden="";
+        StringBuilder txt = new StringBuilder();
+        Connection conn;
+        Vector v_billing = new Vector();
+        try {
+            conn = bpvdb.config1.getConnectionBangna();
+            Statement st = conn.createStatement();
+            if (!visit_hn.equals("")) {
+                hn_search = " and " + bpv_c.getFVisitHn() + " like '%" + visit_hn + "'";
+            }
+            if (!date_end.equals("")) {
+                date_search = " and " + bpv_c.getFCloseDayDate() + " <= '" + bpvdb.config1.DateFormatShow2DB(date_end, "ddMMyyyy") + "' ";
+            }
+//            if(flag.equals("debtor")){
+//                v_billing = getBackTPatientVisitContact(st,branch_id,visit_hn, date_end, paid_id, contact_id, "injury_number_billing_yes");
+//            }else{
+                v_billing = getBackTPatientVisitContact(st,branch_id,visit_hn, date_end, paid_id, contact_id, flag);
+//            }
+    //        for(int row=0;row<=v_billing.size()-1;row++){
+    //            bpv_f = new BackTPatientVisitFunds();
+    //            bpv_f = (BackTPatientVisitFunds)v_billing.get(row);
+    //            bpv_f_id = bpv_f.getPatientVisitFundsId();
+    //            bpv_f = getBackTPatientVisitFundsByPK(branch_id, bpv_f_id, "");
+    //        }
+            for (int i = 0; i <= v_billing.size() - 1; i++) {
+                try {
+                    node_parent = "chk_" + i;
+                    bpv_c = new BackTPatientVisitContact();
+//                    bpv_f_max = new BackTPatientVisitFunds();
+                    bpv_c = (BackTPatientVisitContact)v_billing.get(i);
+                    visit_vn_min = bpv_c.getVisitVn();
+                    visit_vn_max = bpv_c.getPatientVisitContactId();
+//                    bpv_f_max = getBackTPatientVisitFundsByPK(st,branch_id, visit_vn_max, "visit_vn");
+//                    visit_discharge_date = bpv_f_max.getVisitFinancialDischargeTime();
+    //                bpv_f_id = bpv_f.getPatientVisitFundsId();
+                    cnt = bpv_c.getVisitContactJoinNamet();//count billing
+//                    total = bpvdb.config1.NumberFormat(bpv_f.getVisitTotal().toString());
+
+//                    bpv_f = new BackTPatientVisitFunds();
+                    //bpv_c = getBackTPatientVisitContactByPK(st,branch_id, visit_vn_min, "visit_vn");
+                    total = bpvdb.config1.NumberFormat(getSumContactItem(st, bpv_c.getPatientVisitContactId(),"prepare_billing"));//ยังไม่ตรง
+                    if (bpv_c.getStatusBilling().equals("0")) {
+//                      chk_print = "checked";
+                      chk_print = "";
+                      chk_src = "images/print_red.png";
+                    }else {
+                      chk_print = "";
+                      chk_src = "";
+                    }
+                    txt.append("<tr class='style14r'><td align='center'>").append((i + 1)).append("</td>")
+            .append("<td><label><input type='checkbox' name='").append(node_parent).append("' id ='").append(node_parent).append("' value='' ").append(chk_print).append(" onchange='chkbilling(").append(")' >").append(bpv_c.getVisitHn()).append("</label></td>")
+            .append("<td>").append(bpv_c.getPatientFullnamet()).append("</td>")
+            .append("<td align='center'>").append(bpvdb.config1.DateFormatDB2ShowHospital(bpv_c.getVisitDate(), "ddMMyyyy")).append("</td>")
+            .append("<td align='right'>").append(total).append("</td>")
+            .append("<td>").append(cnt).append("</td>")
+            .append("<td><img id='img_" + i + "' name = 'img_").append(i).append("' src='").append(chk_src)
+                            .append("' alt='' align='top' border='0' title='พิมพ์ billing' onclick='chkbilling(").append(i).append(")'/>")
+                            .append("<input type='hidden' id='txt_patient_visit_contact_id").append(i).append("' value='")
+                            .append(bpv_c.getPatientVisitContactId()).append("'><input type='hidden' id='txt_total").append(i)
+                            .append("' value='").append(bpv_c.getVisitTotal())
+                            .append("'><input type='hidden' id='txt_visit_vn_max").append(i).append("' value='").append(visit_vn_max).append("'></td></tr>");
+              }catch (Exception ex){
+                Logger.getLogger(BackTPatientVisitBillingDB.class.getName()).log(Level.SEVERE, null, ex);
+              }
+            }
+            text_h = "<thead> <tr align='center' class='style14r'>"
+                    + "<th width='5' align='center'>ลำดับ</th> "
+                    + "<th width='100' align='left'>HN</th> "
+                    + "<th width='220' align='left'>ชื่อ-นามสกุล</th> "
+                    + "<th width='85' align='left'>วันที่รักษา</th> "
+                    + "<th width='80' align='left'>มูลค่า</th> "
+                    + "<th align='left'>บริษัท</th> "
+                    + "<th width='40' align='left'>พิมพ์</th> </tr></thead>";
+            conn.close();
+        } catch (Exception ex) {
+            Logger.getLogger(BackTPatientVisitFundsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(contact_id.indexOf("^")>0){
+//            String aaa = contact_id.substring(0, contact_id.indexOf("^"));
+//            String bbb = contact_id.substring(contact_id.indexOf("^")+1);
+//            txt_hidden="<input type='text' id='txt_contact_join_check' value='"+aaa+"'>"
+//                    + "<input type='text' id='txt_contact_join_hi' value='"+bbb+"'>";
+        }
+        return "<table width='100%'>" + text_h + txt + "<input type='hidden' id='txt_billing_cover_row' value='" + (v_billing.size() - 1) + "'></table>" + script+txt_hidden;
+    }
+    public String getSumContactItem(Statement st, String bpv_c_id, String flag){
+        String total = "", sql="";
+        if(flag.equals("prepare_billing")){
+            sql = "Select sum(bpv_fi."+bpv_ci.getFItemTotal()+") as "+bpv_ci.getFItemTotal()+" "
+                + "From "+bpv_ci.getBackTPatientVisitContactItem()+" as bpv_fi "
+                + "inner join "+bpv_c.getBackTPatientVisitContact()+" as bpv_f on bpv_f."+bpv_c.getFPatientVisitContactId()+" = bpv_fi."+bpv_ci.getFPatientVisitContactId()+" "
+                + "Where bpv_f."+bpv_ci.getFPatientVisitContactId()+" = '"+bpv_c_id+"' and "
+                + "bpv_fi."+bpv_ci.getFBillingInvoiceItemActive()+"='1' and "+bpv_c.getFStatusBilling()+" = '0' and "
+                + bpv_c.getFPatientVisitContactActive()+" = '1' ";
+        }else if(flag.equals("billing_number")){
+            sql = "Select sum(bpv_fi."+bpv_ci.getFItemTotal()+") as "+bpv_ci.getFItemTotal()+" "
+                + "From "+bpv_ci.getBackTPatientVisitContactItem()+" as bpv_fi "
+                + "inner join "+bpv_c.getBackTPatientVisitContact()+" as bpv_f on bpv_f."+bpv_c.getFPatientVisitContactId()+" = bpv_fi."+bpv_ci.getFPatientVisitContactId()+" "
+                + "Where bpv_f."+bpv_c.getFBillingInvoiceNumber()+" = '"+bpv_c_id+"' and "
+                + "bpv_fi."+bpv_ci.getFBillingInvoiceItemActive()+"='1' and "+bpv_c.getFStatusBilling()+" = '2' ";
+        }else if(flag.equals("funds_id_billinged")){
+            sql = "Select sum(bpv_fi."+bpv_ci.getFItemTotal()+") as "+bpv_ci.getFItemTotal()+" "
+                + "From "+bpv_ci.getBackTPatientVisitContactItem()+" as bpv_fi "
+                + "inner join "+bpv_c.getBackTPatientVisitContact()+" as bpv_f on bpv_f."+bpv_c.getFPatientVisitContactId()+" = bpv_fi."+bpv_ci.getFPatientVisitContactId()+" "
+                + "Where bpv_f."+bpv_ci.getFPatientVisitContactId()+" = '"+bpv_c_id+"' and "
+                + "bpv_fi."+bpv_ci.getFBillingInvoiceItemActive()+"='1' and "+bpv_c.getFStatusBilling()+" = '2' ";
+        }else if(flag.equals("contact_id")){
+            sql = "Select sum(bpv_fi."+bpv_ci.getFItemTotal()+") as "+bpv_ci.getFItemTotal()+" "
+                + "From "+bpv_ci.getBackTPatientVisitContactItem()+" as bpv_fi "
+                + "inner join "+bpv_c.getBackTPatientVisitContact()+" as bpv_f on bpv_f."+bpv_c.getFPatientVisitContactId()+" = bpv_fi."+bpv_ci.getFPatientVisitContactId()+" "
+                + "Where bpv_f."+bpv_ci.getFPatientVisitContactId()+" = '"+bpv_c_id+"' and "
+                + "bpv_fi."+bpv_ci.getFBillingInvoiceItemActive()+"='1' and "+bpv_c.getFStatusBilling()+" <> '2' ";
+        }
+        ResultSet rs;
+        try {
+            rs = st.executeQuery(sql);
+            while(rs.next()){
+                if(rs.getString(bpv_ci.getFItemTotal()) != null){
+                    total = rs.getString(bpv_ci.getFItemTotal());
+                }else{
+                    total = "0";
+                }
+
+            }
+            rs.close();
+        } catch (Exception ex) {
+            Logger.getLogger(BackTPatientVisitFundsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    }
+    public void setUpdatePatientVisitContactStatusPayment(String branch_id, String bpv_c_id,
+            String billing_payment_id, String status_payment, Double receive_amount) {
+        String sql = "";
+        try {
+          Connection conn = bpvdb.config1.getConnectionBangna();
+          Statement st = conn.createStatement();
+          sql = "Update " + bpv_c.getBackTPatientVisitContact()
+                  + " Set " + bpv_c.getFBillingPaymentItemId() + "='"+billing_payment_id+"',"
+                  +bpv_c.getFStatusBilling()+"='"+status_payment+"', "
+                  +bpv_c.getFReceiveAmount()+"="+receive_amount+" "
+                  + "Where " + bpv_c.getFPatientVisitContactId() + "='" + bpv_c_id + "'";
+
+          st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitFundsDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String setUpdatePatientVisitTotalN(String branch_id, String bpvCId, Double total) {
+        String sql = "";
+        Integer chk = 0;
+        try {
+            Connection conn = config1.getConnectionBangna();
+            Statement st = conn.createStatement();
+            sql = "Update " + bpv_c.getBackTPatientVisitContact()
+                + " Set " + bpv_c.getFVisitTotal() + "="+ total + " "
+                + "Where " + bpv_c.getFPatientVisitContactId() + "='" + bpvCId + "' and "
+                + bpv_c.getFBranchId() + "='" + branch_id + "'";
+
+          chk = st.executeUpdate(sql);
+          conn.close();
+        } catch (Exception ex) {
+          Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return chk.toString();
+    }
+    public Integer setUpdatePatientVisitDiscount(String branch_id, String bpvCId, Double discount) {
+        String sql = "";
+        int chk = 0;
+        try {
+            Connection conn = config1.getConnectionBangna();
+            Statement st = conn.createStatement();
+            sql = "Update " + bpv_c.getBackTPatientVisitContact() 
+                + " Set " + bpv_c.getFVisitDiscount() + "=" + discount + " "
+                + "Where " + bpv_c.getFPatientVisitContactId() + "='" + bpvCId + "' and " + bpv_c.getFBranchId() + "='" + branch_id + "'";
+            chk = st.executeUpdate(sql);
+            conn.close();
+        } catch (Exception ex) {
+            Logger.getLogger(BackTPatientVisitDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Integer.valueOf(chk);
+    }
+}

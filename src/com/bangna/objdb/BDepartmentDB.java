@@ -1,0 +1,110 @@
+package com.bangna.objdb;
+
+
+import bangnaLibrary.*;
+import com.bangna.object.BDepartment;
+import java.sql.*;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author pop
+ */
+public class BDepartmentDB {
+    BDepartment bdepartment;
+    bangnaLibrary.Config1 config1;
+    bangnaLibrary.BBranch branch;
+    
+    public BDepartmentDB(){
+        config1 = new bangnaLibrary.Config1();
+        initConfig();
+    }
+    public BDepartmentDB(bangnaLibrary.Config1 cf){
+        config1 = cf;
+        initConfig();
+    }
+    public void initConfig(){
+        bdepartment = new BDepartment();
+        branch = new bangnaLibrary.BBranch();
+    }
+    public Vector SelectDepartment(String branch_id) {
+        String sql="";
+        Vector v_b_department = new Vector();
+        BDepartment b_department = new BDepartment();
+        Connection conn;
+        try {
+            conn = config1.getConnectionBangna();
+            Statement st = conn.createStatement();
+            sql = "Select "+b_department.getFDepartmentId()+", "+b_department.getFDepartmentNamet()+", "
+                    +b_department.getFTelephone()+" "
+                    +" From "+b_department.getBDepartment()
+                    +" Where "+b_department.getFDepartmentActive()+" = '1' and "
+                    +b_department.getFBranchId()+"='"+branch_id+"'"
+                    +"Order By "+b_department.getFDepartmentNamet();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()) {
+                b_department = new BDepartment();
+                //department += "<option value='"+rs.getString("department_id")+"'>"+rs.getString("department_namet")+"</option>";
+                b_department.setDepartmentActive("1");
+                b_department.setDepartmentId(rs.getString(b_department.getFDepartmentId()));
+                b_department.setDepartmentNamet(rs.getString(b_department.getFDepartmentNamet()));
+                b_department.setTelephone(rs.getString(b_department.getFTelephone()));
+                v_b_department.add(b_department);
+            }//<OPTION VALUE=\""+k+"\">"+gran.getName()+"</OPTION>\n
+            rs.close();
+            conn.close();
+        } catch (Exception ex) {
+            Logger.getLogger(Config1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return v_b_department;
+    }
+    public String CboDepartment(String selected){
+        String txt="",sql="";
+        Vector v_b_department = new Vector();
+        BDepartment b_department = new BDepartment();
+        v_b_department = SelectDepartment(null);
+        for(int i=0;i<=v_b_department.size()-1;i++) {
+            b_department = (BDepartment) v_b_department.get(i);
+            if(b_department.getDepartmentId().equals(selected)){
+                txt += "<option value='"+b_department.getDepartmentId()+"' selected>"+b_department.getDepartmentNamet()+"</option>";
+                //ma_department_cbo += "<option value='"+b_department.getDepartmentId()+"' selected>"+b_department.getDepartmentNamet()+"</option>";
+            }
+            else{
+                txt += "<option value='"+b_department.getDepartmentId()+"' >"+b_department.getDepartmentNamet()+"</option>";
+                //ma_department_cbo += "<option value='"+b_department.getDepartmentId()+"'>"+b_department.getDepartmentNamet()+"</option>";
+            }
+            if(i==4){
+                sql="";
+            }
+        }
+        return txt;
+    }
+    public String CboDepartment(String branch_id,String selected){
+        String txt="",sql="";
+        Vector v_b_department = new Vector();
+        BDepartment b_department = new BDepartment();
+        v_b_department = SelectDepartment(branch_id);
+        for(int i=0;i<=v_b_department.size()-1;i++) {
+            b_department = (BDepartment) v_b_department.get(i);
+            if(b_department.getDepartmentId().equals(selected)){
+                txt += "<option value='"+b_department.getDepartmentId()+"' selected>"+b_department.getDepartmentNamet()+"</option>";
+                //ma_department_cbo += "<option value='"+b_department.getDepartmentId()+"' selected>"+b_department.getDepartmentNamet()+"</option>";
+            }
+            else{
+                txt += "<option value='"+b_department.getDepartmentId()+"' >"+b_department.getDepartmentNamet()+"</option>";
+                //ma_department_cbo += "<option value='"+b_department.getDepartmentId()+"'>"+b_department.getDepartmentNamet()+"</option>";
+            }
+            if(i==4){
+                sql="";
+            }
+        }
+        return txt;
+    }
+}

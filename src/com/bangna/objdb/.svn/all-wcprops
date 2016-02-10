@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/bangna/!svn/ver/1561/bangnaLibrary/src/com/bangna/objdb
+END
+SLogDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/bangna/!svn/ver/707/bangnaLibrary/src/com/bangna/objdb/SLogDB.java
+END
+MarketingTCheckupPatientDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/bangna/!svn/ver/450/bangnaLibrary/src/com/bangna/objdb/MarketingTCheckupPatientDB.java
+END
+BackTPatientVisitFundsBillingDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/bangna/!svn/ver/1271/bangnaLibrary/src/com/bangna/objdb/BackTPatientVisitFundsBillingDB.java
+END
+FAddressDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/bangna/!svn/ver/1498/bangnaLibrary/src/com/bangna/objdb/FAddressDB.java
+END
+BackTPatientVisitContactBillingDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/bangna/!svn/ver/1422/bangnaLibrary/src/com/bangna/objdb/BackTPatientVisitContactBillingDB.java
+END
+BackTPatientVisitContactDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/bangna/!svn/ver/1560/bangnaLibrary/src/com/bangna/objdb/BackTPatientVisitContactDB.java
+END
+TPatientVipDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/bangna/!svn/ver/537/bangnaLibrary/src/com/bangna/objdb/TPatientVipDB.java
+END
+BangnaDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/bangna/!svn/ver/380/bangnaLibrary/src/com/bangna/objdb/BangnaDB.java
+END
+BackTPatientVisitFundsDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/bangna/!svn/ver/1561/bangnaLibrary/src/com/bangna/objdb/BackTPatientVisitFundsDB.java
+END
+RStickerDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/bangna/!svn/ver/1271/bangnaLibrary/src/com/bangna/objdb/RStickerDB.java
+END
+CashierTBillingInvoicePrintDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/bangna/!svn/ver/380/bangnaLibrary/src/com/bangna/objdb/CashierTBillingInvoicePrintDB.java
+END
+BDepartmentDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/bangna/!svn/ver/841/bangnaLibrary/src/com/bangna/objdb/BDepartmentDB.java
+END
+BackTDebtorDB.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/bangna/!svn/ver/1000/bangnaLibrary/src/com/bangna/objdb/BackTDebtorDB.java
+END

@@ -1,0 +1,175 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package bangnaLibrary;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author root
+ */
+@Entity
+@Table(name = "b_period", catalog = "bangna", schema = "public")
+@NamedQueries({@NamedQuery(name = "BPeriod.findAll", query = "SELECT b FROM BPeriod b"), @NamedQuery(name = "BPeriod.findByPeriodId", query = "SELECT b FROM BPeriod b WHERE b.periodId = :periodId"), @NamedQuery(name = "BPeriod.findByPeriodNamet", query = "SELECT b FROM BPeriod b WHERE b.periodNamet = :periodNamet"), @NamedQuery(name = "BPeriod.findByBranchId", query = "SELECT b FROM BPeriod b WHERE b.branchId = :branchId"), @NamedQuery(name = "BPeriod.findByFVisitTypeId", query = "SELECT b FROM BPeriod b WHERE b.fVisitTypeId = :fVisitTypeId"), @NamedQuery(name = "BPeriod.findByPeriodStartTime", query = "SELECT b FROM BPeriod b WHERE b.periodStartTime = :periodStartTime"), @NamedQuery(name = "BPeriod.findByPeriodEndTime", query = "SELECT b FROM BPeriod b WHERE b.periodEndTime = :periodEndTime"), @NamedQuery(name = "BPeriod.findByPeriodActive", query = "SELECT b FROM BPeriod b WHERE b.periodActive = :periodActive")})
+public class BPeriod implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "period_id", nullable = false, length = 255)
+    private String periodId="";
+    @Column(name = "period_namet", length = 255)
+    private String periodNamet="";
+    @Column(name = "branch_id", length = 255)
+    private String branchId="";
+    @Column(name = "f_visit_type_id", length = 255)
+    private String fVisitTypeId="";
+    @Column(name = "period_start_time", length = 255)
+    private String periodStartTime="";
+    @Column(name = "period_end_time", length = 255)
+    private String periodEndTime="";
+    @Column(name = "period_active", length = 255)
+    private String periodActive="";
+    @Column(name = "cash_in_drawer", length = 255)
+    private Double cashInDrawer=0.0;
+
+    public BPeriod() {
+    }
+    public void initial(){
+        periodId="";
+        periodNamet="";
+        branchId="";
+        fVisitTypeId="";
+        periodStartTime="";
+        periodEndTime="";
+        periodActive="";
+        cashInDrawer=0.0;
+    }
+
+    public String getBPeriod() {
+        return "b_period";
+    }
+    public String getFBPeriodId() {
+        return "period_id";
+    }
+    public String getFBPeriodNamet() {
+        return "period_namet";
+    }
+    public String getFBranchId() {
+        return "branch_id";
+    }
+    public String getFFVisitTypeId() {
+        return "f_visit_type_id";
+    }
+    public String getFPeriodStartTime() {
+        return "period_start_time";
+    }
+    public String getFPeriodEndTime() {
+        return "period_end_time";
+    }
+    public String getFPeriodActive() {
+        return "period_active";
+    }
+    public String getFCashInDrawer() {
+        return "cash_in_drawer";
+    }
+
+
+    public BPeriod(String periodId) {
+        this.periodId = periodId;
+    }
+
+    public String getPeriodId() {
+        return periodId;
+    }
+
+    public void setPeriodId(String periodId) {
+        this.periodId = periodId;
+    }
+
+    public String getPeriodNamet() {
+        return periodNamet;
+    }
+
+    public void setPeriodNamet(String periodNamet) {
+        this.periodNamet = periodNamet;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
+
+    public String getFVisitTypeId() {
+        return fVisitTypeId;
+    }
+
+    public void setFVisitTypeId(String fVisitTypeId) {
+        this.fVisitTypeId = fVisitTypeId;
+    }
+    public String getPeriodStartTime() {
+        return periodStartTime;
+    }
+
+    public void setPeriodStartTime(String periodStartTime) {
+        this.periodStartTime = periodStartTime;
+    }
+    public String getPeriodEndTime() {
+        return periodEndTime;
+    }
+
+    public void setPeriodEndTime(String periodEndTime) {
+        this.periodEndTime = periodEndTime;
+    }
+    public String getPeriodActive() {
+        return periodActive;
+    }
+    public void setPeriodActive(String periodActive) {
+        this.periodActive = periodActive;
+    }
+
+    public Double getCashIndrawer() {
+        return cashInDrawer;
+    }
+    public void setCashIndrawer(Double cashInDrawer) {
+        this.cashInDrawer = cashInDrawer;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (periodId != null ? periodId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof BPeriod)) {
+            return false;
+        }
+        BPeriod other = (BPeriod) object;
+        if ((this.periodId == null && other.periodId != null) || (this.periodId != null && !this.periodId.equals(other.periodId))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "bangnaLibrary.BPeriod[periodId=" + periodId + "]";
+    }
+
+}

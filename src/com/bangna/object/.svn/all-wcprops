@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/bangna/!svn/ver/1555/bangnaLibrary/src/com/bangna/object
+END
+MarketingTCheckupPatient.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/bangna/!svn/ver/450/bangnaLibrary/src/com/bangna/object/MarketingTCheckupPatient.java
+END
+BackTPatientVisitContactBilling.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/bangna/!svn/ver/1271/bangnaLibrary/src/com/bangna/object/BackTPatientVisitContactBilling.java
+END
+BackTPatientVisitFundsItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/bangna/!svn/ver/1555/bangnaLibrary/src/com/bangna/object/BackTPatientVisitFundsItem.java
+END
+BackTPatientVisitContact.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/bangna/!svn/ver/1552/bangnaLibrary/src/com/bangna/object/BackTPatientVisitContact.java
+END
+TPatientVip.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/bangna/!svn/ver/537/bangnaLibrary/src/com/bangna/object/TPatientVip.java
+END
+LabList.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/bangna/!svn/ver/665/bangnaLibrary/src/com/bangna/object/LabList.java
+END
+RSticker.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/bangna/!svn/ver/830/bangnaLibrary/src/com/bangna/object/RSticker.java
+END
+CashierTBillingInvoicePrint.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/bangna/!svn/ver/380/bangnaLibrary/src/com/bangna/object/CashierTBillingInvoicePrint.java
+END
+BackTPatientVisitContactBillingTemp.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/bangna/!svn/ver/1422/bangnaLibrary/src/com/bangna/object/BackTPatientVisitContactBillingTemp.java
+END
+BackTPatientVisitContactBillingItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/bangna/!svn/ver/968/bangnaLibrary/src/com/bangna/object/BackTPatientVisitContactBillingItem.java
+END
+CategoryGroup.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/bangna/!svn/ver/1046/bangnaLibrary/src/com/bangna/object/CategoryGroup.java
+END
+OrderItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/bangna/!svn/ver/1046/bangnaLibrary/src/com/bangna/object/OrderItem.java
+END
+OrderItemDrug.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/bangna/!svn/ver/1046/bangnaLibrary/src/com/bangna/object/OrderItemDrug.java
+END
+BackTPatientVisitContactItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/bangna/!svn/ver/1554/bangnaLibrary/src/com/bangna/object/BackTPatientVisitContactItem.java
+END
+BackTPatientVisitFundsBilling.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/bangna/!svn/ver/968/bangnaLibrary/src/com/bangna/object/BackTPatientVisitFundsBilling.java
+END
+OrderStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/bangna/!svn/ver/1046/bangnaLibrary/src/com/bangna/object/OrderStatus.java
+END
+VTBillingInvoiceSubgroupN.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/bangna/!svn/ver/935/bangnaLibrary/src/com/bangna/object/VTBillingInvoiceSubgroupN.java
+END
+CashierTBillingInvoicePrintDetail.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/bangna/!svn/ver/375/bangnaLibrary/src/com/bangna/object/CashierTBillingInvoicePrintDetail.java
+END
+BackTPatientVisitFunds.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/bangna/!svn/ver/1553/bangnaLibrary/src/com/bangna/object/BackTPatientVisitFunds.java
+END
+MarketingReport.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/bangna/!svn/ver/450/bangnaLibrary/src/com/bangna/object/MarketingReport.java
+END
+BItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/bangna/!svn/ver/375/bangnaLibrary/src/com/bangna/object/BItem.java
+END
+BDepartment.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/bangna/!svn/ver/602/bangnaLibrary/src/com/bangna/object/BDepartment.java
+END
+BackTPatientVisitFundsBillingTemp.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/bangna/!svn/ver/842/bangnaLibrary/src/com/bangna/object/BackTPatientVisitFundsBillingTemp.java
+END
+BackTPatientVisitFundsBillingItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/bangna/!svn/ver/842/bangnaLibrary/src/com/bangna/object/BackTPatientVisitFundsBillingItem.java
+END
+SLog.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/bangna/!svn/ver/776/bangnaLibrary/src/com/bangna/object/SLog.java
+END
