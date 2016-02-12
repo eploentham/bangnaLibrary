@@ -3354,6 +3354,9 @@ public class Config1 {
                         if(!ward1.equals("")) {//hnno
                             where += " and pt08.mnc_hn_no = '"+ward1+"' ";
                         }
+                        if(!ward_no.equals("")) {//ward
+                            where += " and pt08.mnc_wd_no = '"+ward_no+"' ";
+                        }
 //                        sql = "Select pt08.mnc_hn_no as no, mnc_ds_date, mnc_ds_lev, mnc_wd_no, "
 //                            +"pm02.mnc_pfix_dsc + ' ' + pm01.mnc_fname_t + ' '+ pm01.mnc_lname_t as name, "
 //                            +"pm32.mnc_md_dep_dsc, pt08.mnc_fn_typ_cd, fm02.mnc_fn_typ_dsc, '' as visit_bed "
